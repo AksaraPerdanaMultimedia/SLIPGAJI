@@ -74,17 +74,32 @@ function who_(t) {
   return u;
 }
 
+const BLN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+// Slip periode "Oktober 2026" baru dirilis tanggal 3 bulan berikutnya (3 November 2026), 00:00 WIB
+function rel_(p) {
+  const m = String(p).trim().toLowerCase().match(/^([a-z]+)\s+(\d{4})$/);
+  const i = m ? BLN.findIndex(b => b.toLowerCase() === m[1]) : -1;
+  return i < 0 ? null : new Date(+m[2], i + 1, 3);
+}
+
 // Data ringan (tanpa gambar): semua slip milik user (SPV: semua karyawan); filter periode dilakukan di layar
 function build_(u) {
   const spv = u['Jabatan'].toUpperCase() === 'SPV';
   const s = tbl_('Slip_Gaji', 'Periode').rows, emp = tbl_('Data_Karyawan', 'NIK').rows;
-  const slips = s.filter(r => spv || r['NIP'] === u['NIK']).map(r => {
+  const now = new Date();
+  // Hanya SPV yang melihat semua; karyawan tidak menerima data periode yang belum dirilis (dicegah di server)
+  const periods = [...new Set(s.map(r => r['Periode']))].map(p => {
+    const d = rel_(p);
+    return { p, locked: !spv && !!d && now < d, rel: d ? d.getDate() + ' ' + BLN[d.getMonth()] + ' ' + d.getFullYear() : '' };
+  });
+  const lockedSet = new Set(periods.filter(x => x.locked).map(x => x.p));
+  const slips = s.filter(r => (spv || r['NIP'] === u['NIK']) && !lockedSet.has(r['Periode'])).map(r => {
     const e = emp.find(x => x['NIK'] === r['NIP']) || {};
     const o = Object.assign({}, r, { Nama: e['Nama Karyawan'] || r['NIP'], Jabatan: e['Jabatan'] || '', Departemen: e['Departemen'] || '', Bank: e['Bank'] || '', Rek: e['No Rekening'] || '' });
     delete o['Logo Perusahaan']; delete o._row; return o;
   });
   return {
-    spv, slips, periods: [...new Set(s.map(r => r['Periode']))],
+    spv, slips, periods,
     me: { nik: u['NIK'], nama: u['Nama Karyawan'], jabatan: u['Jabatan'], dept: u['Departemen'] }
   };
 }
