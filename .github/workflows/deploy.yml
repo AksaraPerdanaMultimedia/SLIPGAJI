@@ -1,0 +1,25 @@
+name: Deploy Apps Script
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm i -g @google/clasp
+      - name: Login clasp
+        env:
+          CLASPRC_JSON: ${{ secrets.CLASPRC_JSON }}
+        run: |
+          printf '%s' "$CLASPRC_JSON" > ~/.clasprc.json
+          test -f .clasp.json && cat .clasp.json | sed 's/"scriptId":"[^"]*"/"scriptId":"(disembunyikan)"/'
+      - name: Push & deploy
+        env:
+          DEPLOYMENT_ID: ${{ secrets.DEPLOYMENT_ID }}
+        run: |
+          clasp push -f
+          clasp deploy -i "$DEPLOYMENT_ID" -d "gh-${GITHUB_SHA::7}"
