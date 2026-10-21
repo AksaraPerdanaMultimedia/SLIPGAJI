@@ -77,8 +77,6 @@ select option{color:#000}
   <div class="ava" id="ava"></div>
   <div class="who"><b id="nm"></b><span id="ds"></span><br><span class="tag" id="tg"></span></div>
  </div>
- <div class="card info"><div class="sticker" id="st">😊</div>
-  <p>Slip gaji ini akan tampil otomatis di setiap tanggal 3, Terimakasih sudah bekerja semaksimal mungkin</p></div>
  <div class="card">
   <h2 style="margin-bottom:10px">Periode Gaji</h2>
   <select id="per"></select>
@@ -164,10 +162,6 @@ function slipHtml(s,i){
 $('per').onchange=()=>{per=$('per').value;render()};
 setInterval(()=>{if(tok&&D)load(true)},120000);
 if(tok)load();
-
-// Stiker senyum bergerak tiap 3 detik
-const EM=['😊','😄','🥰','😁','🤗'];let ei=0;
-setInterval(()=>{const s=$('st');s.classList.remove('go');void s.offsetWidth;ei=(ei+1)%EM.length;s.textContent=EM[ei];s.classList.add('go')},3000);
 
 // Ganti password
 const mo=v=>$('md').classList.toggle('hide',!v);
