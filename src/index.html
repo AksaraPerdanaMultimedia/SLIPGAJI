@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="id"><head><base target="_top"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f3f5ff">
+<title>Slip Gaji</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+:root{--bg:#f3f5ff;--c1:#6366f1;--c2:#06b6d4;--c3:#f472b6;--tx:#1e1b4b;--mu:#64748b;--gl:rgba(255,255,255,.75)}
+html,body{height:100%}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--tx);min-height:100dvh;overflow-x:hidden;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+.blob{position:fixed;border-radius:50%;filter:blur(70px);opacity:.38;z-index:0;animation:fl 14s ease-in-out infinite alternate}
+.b1{width:60vw;height:60vw;background:var(--c1);top:-15vw;left:-15vw}
+.b2{width:55vw;height:55vw;background:var(--c2);bottom:-15vw;right:-12vw;animation-delay:-5s}
+.b3{width:35vw;height:35vw;background:var(--c3);top:40%;left:55%;opacity:.22;animation-delay:-9s}
+@keyframes fl{to{transform:translate(8vw,6vh) scale(1.2)}}
+.wrap{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:clamp(14px,4vw,24px);min-height:100dvh;display:flex;flex-direction:column;gap:14px}
+.card{background:var(--gl);border:1px solid rgba(99,102,241,.14);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:22px;padding:clamp(16px,4.5vw,22px);box-shadow:0 10px 40px rgba(79,70,229,.12);animation:up .6s both}
+@keyframes up{from{opacity:0;transform:translateY(18px)}}
+.hide{display:none!important}
+#login{justify-content:center;text-align:center}
+.logo{width:clamp(90px,30vw,130px);height:clamp(90px,30vw,130px);object-fit:contain;margin:0 auto 12px;display:block;animation:pulse 3s infinite}
+@keyframes pulse{0%,100%{filter:drop-shadow(0 0 0 rgba(99,102,241,0))}50%{filter:drop-shadow(0 0 12px rgba(255,140,40,.55))}}
+h1{font-size:clamp(18px,5.5vw,24px)}h2{font-size:clamp(15px,4.5vw,18px)}
+.sub{color:var(--mu);font-size:13px;margin:4px 0 16px}
+input,select{width:100%;padding:14px;border-radius:14px;border:1px solid rgba(99,102,241,.25);background:rgba(255,255,255,.92);color:var(--tx);font-size:16px;margin-bottom:10px;outline:none}
+input:focus,select:focus{border-color:var(--c2);box-shadow:0 0 0 3px rgba(6,182,212,.25)}
+select option{color:#000}
+.btn{width:100%;padding:14px;border:0;border-radius:14px;font-size:15px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--c1),var(--c2));cursor:pointer;transition:transform .15s}
+.btn:active{transform:scale(.97)}.btn.ghost{background:rgba(255,255,255,.85);color:var(--tx);border:1px solid rgba(99,102,241,.25)}
+::placeholder{color:#94a3b8}
+.btn.sm{width:auto;padding:9px 14px;font-size:13px}
+.err{color:#e11d48;font-size:13px;min-height:18px;margin-bottom:6px}
+.top{display:flex;align-items:center;gap:14px}
+.ava{width:72px;height:72px;border-radius:50%;flex:none;position:relative;overflow:hidden;border:3px solid var(--c2);background:linear-gradient(135deg,var(--c1),var(--c3));display:grid;place-items:center;font-weight:800;font-size:26px;animation:glow 3s infinite}
+.ava img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top}
+@keyframes glow{50%{box-shadow:0 0 0 10px rgba(6,182,212,.18)}}
+.who{min-width:0;flex:1}.who b{display:block;font-size:clamp(15px,4.6vw,18px)}.who span{color:var(--mu);font-size:12.5px}
+.tag{display:inline-block;margin-top:4px;padding:2px 10px;border-radius:99px;background:rgba(99,102,241,.14);color:#4338ca;font-size:11px}
+.row{display:flex;gap:8px;margin-top:12px}.row .btn{flex:1}
+.info{display:flex;gap:12px;align-items:center;background:linear-gradient(135deg,rgba(99,102,241,.13),rgba(244,114,182,.2))}
+.sticker{font-size:44px;flex:none;line-height:1;user-select:none;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35))}
+.sticker.go{animation:wig 1s}
+@keyframes wig{0%{transform:scale(1) rotate(0)}25%{transform:scale(1.35) rotate(-18deg) translateY(-8px)}50%{transform:scale(1.2) rotate(16deg)}75%{transform:scale(1.3) rotate(-10deg) translateY(-4px)}100%{transform:scale(1) rotate(0)}}
+.info p{font-size:13.5px;line-height:1.5}
+.slip .hd{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.slip .hd img{width:44px;height:44px;object-fit:contain}
+.slip .hd small{color:var(--mu);display:block;font-size:11px}
+.ln{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px dashed rgba(99,102,241,.22);font-size:14px}
+.ln span:first-child{color:var(--mu)}.ln.neg span:last-child{color:#e11d48}
+.thp{margin-top:12px;padding:14px;border-radius:16px;background:linear-gradient(135deg,var(--c1),var(--c2));display:flex;justify-content:space-between;align-items:center;font-weight:800}
+.thp span:last-child{font-size:clamp(17px,5.5vw,22px)}
+.upd{text-align:center;color:var(--mu);font-size:11px}
+.empty{text-align:center;color:var(--mu);padding:26px 10px;font-size:14px}
+.modal{position:fixed;inset:0;z-index:5;background:rgba(15,23,42,.45);display:grid;place-items:center;padding:18px}
+.modal .card{width:100%;max-width:400px}
+.spin{width:18px;height:18px;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;display:inline-block;animation:r .7s linear infinite;vertical-align:middle}
+@keyframes r{to{transform:rotate(360deg)}}
+</style></head><body>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+
+<div class="wrap" id="login">
+ <div class="card">
+  <img id="lg" class="logo hide" alt="logo">
+  <h1 id="cn">PT Aksara Perdana Multimedia</h1>
+  <p class="sub">Portal Slip Gaji Karyawan</p>
+  <input id="ak" placeholder="Akun (NIK)" autocomplete="username" autocapitalize="off">
+  <input id="pw" type="password" placeholder="Password" autocomplete="current-password">
+  <div class="err" id="le"></div>
+  <button class="btn" id="lb">Masuk</button>
+ </div>
+</div>
+
+<div class="wrap hide" id="dash">
+ <div class="card top">
+  <div class="ava" id="ava"></div>
+  <div class="who"><b id="nm"></b><span id="ds"></span><br><span class="tag" id="tg"></span></div>
+ </div>
+ <div class="card info"><div class="sticker" id="st">😊</div>
+  <p>Slip gaji ini akan tampil otomatis di setiap tanggal 3, Terimakasih sudah bekerja semaksimal mungkin</p></div>
+ <div class="card">
+  <h2 style="margin-bottom:10px">Periode Gaji</h2>
+  <select id="per"></select>
+ </div>
+ <div id="slips"></div>
+ <div class="card"><div class="row" style="margin:0">
+  <button class="btn ghost" id="cp">🔑 Ganti Password</button>
+  <button class="btn ghost" id="lo">Keluar</button></div></div>
+ <div class="upd" id="up"></div>
+</div>
+
+<div class="modal hide" id="md"><div class="card">
+ <h2 style="margin-bottom:12px">Ganti Password</h2>
+ <input id="o" type="password" placeholder="Password lama">
+ <input id="n" type="password" placeholder="Password baru (min. 6 karakter)">
+ <input id="n2" type="password" placeholder="Ulangi password baru">
+ <div class="err" id="me"></div>
+ <div class="row"><button class="btn ghost" id="mc">Batal</button><button class="btn" id="ms">Simpan</button></div>
+</div></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const API_URL='__API_URL__';
+// Jalan di dua mode: di dalam Apps Script (google.script.run) atau di GitHub Pages (fetch ke web app)
+const rpc=(f,...a)=>(window.google&&google.script&&google.script.run)
+ ?new Promise((ok,no)=>google.script.run.withSuccessHandler(ok).withFailureHandler(no)[f](...a))
+ :fetch(API_URL,{method:'POST',body:JSON.stringify({fn:f,args:a})}).then(r=>r.json()).then(j=>{if(j.error)throw new Error(j.error);return j.data});
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const rp=v=>!v?'-':(/^Rp/.test(v)?v:'Rp '+v.replace(/,00$/,''));
+let tok=sessionStorage.getItem('tok'),D=null,per='',COMPANY='PT Aksara Perdana Multimedia',LOGO='',LD=null,FOTO='',imgDone=0;
+const ls=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}};
+
+// logo bulat: potong tepat mengikuti lingkaran oranye (buang kotak putih, huruf putih tetap utuh)
+function whiten(src){return new Promise(ok=>{const i=new Image();i.onload=()=>{try{
+ const W=i.width,H=i.height,c0=document.createElement('canvas');c0.width=W;c0.height=H;const x0=c0.getContext('2d');x0.drawImage(i,0,0);
+ const p=x0.getImageData(0,0,W,H).data;let x1=W,y1=H,x2=0,y2=0;
+ for(let y=0;y<H;y++)for(let x=0;x<W;x++){const o=(y*W+x)*4;if(p[o+3]>128&&Math.max(p[o],p[o+1],p[o+2])-Math.min(p[o],p[o+1],p[o+2])>70){if(x<x1)x1=x;if(x>x2)x2=x;if(y<y1)y1=y;if(y>y2)y2=y}}
+ if(x2<=x1)return ok(src);
+ const cx=(x1+x2)/2,cy=(y1+y2)/2,S=Math.round(Math.max(x2-x1,y2-y1)+2),c=document.createElement('canvas');c.width=c.height=S;const x=c.getContext('2d');
+ x.beginPath();x.arc(S/2,S/2,S/2,0,7);x.clip();x.drawImage(i,S/2-cx,S/2-cy);ok(c.toDataURL('image/png'))}catch(e){ok(src)}};i.onerror=()=>ok(src);i.src=src})}
+function useLogo(p){if(!p||p===LOGO)return;LOGO=p;$('lg').src=p;$('lg').classList.remove('hide');
+ const i=new Image();i.onload=()=>{LD={w:i.width,h:i.height};if(D)render()};i.src=p}
+async function setLogo(src){if(!src)return;const k='v2'+src.length+src.slice(200,230);
+ let p=ls('lk')===k?ls('lp'):null;if(!p){p=await whiten(src);ls('lk',k);ls('lp',p)}useLogo(p)}
+useLogo(ls('lp'));
+rpc('pub').then(p=>{COMPANY=p.company;$('cn').textContent=p.company;setLogo(p.logo)}).catch(()=>{});
+
+function apply(d){D=d;if(!d.periods.includes(per))per=d.periods[d.periods.length-1];FOTO=ls('f_'+d.me.nik)||'';render();
+ if(!imgDone){imgDone=1;rpc('getImages',tok).then(r=>{if(r.foto){FOTO=r.foto;ls('f_'+D.me.nik,r.foto)}if(r.logo)return setLogo(r.logo)}).then(()=>render()).catch(()=>{})}}
+
+$('lb').onclick=async()=>{
+ $('le').textContent='';$('lb').innerHTML='<span class="spin"></span>';
+ try{const r=await rpc('login',$('ak').value,$('pw').value);
+  if(!r.ok){$('le').textContent=r.msg}else{tok=r.token;sessionStorage.setItem('tok',tok);imgDone=0;apply(r.data)}
+ }catch(e){$('le').textContent='Gagal terhubung, coba lagi'}
+ $('lb').textContent='Masuk'};
+$('pw').onkeydown=e=>{if(e.key==='Enter')$('lb').click()};
+
+function out(){sessionStorage.removeItem('tok');tok=null;D=null;per='';$('dash').classList.add('hide');$('login').classList.remove('hide');$('pw').value=''}
+$('lo').onclick=out;
+
+async function load(silent){
+ try{apply(await rpc('getData',tok))}
+ catch(e){if(String(e.message||e).includes('SESI'))out();else if(!silent)alert('Gagal memuat data')}}
+
+function render(){
+ $('login').classList.add('hide');$('dash').classList.remove('hide');
+ const m=D.me;$('nm').textContent=m.nama;$('ds').textContent=m.nik+' · '+m.dept;$('tg').textContent=m.jabatan;
+ const av=$('ava'),k=FOTO||'-';if(av.dataset.k!==k){av.dataset.k=k;av.innerHTML=FOTO?`<img src="${FOTO}" alt="">`:esc((m.nama||'?').trim()[0])}
+ $('per').innerHTML=[...D.periods].reverse().map(p=>`<option ${p===per?'selected':''}>${esc(p)}</option>`).join('');
+ const sl=D.slips.filter(s=>s['Periode']===per);
+ $('slips').innerHTML=sl.length?sl.map((s,i)=>slipHtml(s,i)).join(''):'<div class="card empty">Belum ada slip gaji untuk periode ini</div>';
+ $('up').textContent='Diperbarui otomatis tiap 2 menit · terakhir '+new Date().toLocaleTimeString('id-ID')}
+
+const F=[['Gaji Pokok'],['BPJS'],['Bensin'],['Sewa Motor'],['Perolehan Poin',1],['Bonus Poin'],['Total Salary'],['PPh21 (2,5%)',0,1]];
+function slipHtml(s,i){
+ return `<div class="card slip" style="animation-delay:${i*.08}s"><div class="hd">${LOGO?`<img src="${LOGO}">`:''}<div><b>${esc(COMPANY)}</b><small>Slip Gaji · ${esc(s['Periode'])}</small></div></div>
+ ${D.spv?`<div class="ln"><span>Karyawan</span><span>${esc(s.Nama)}</span></div>`:''}
+ ${F.map(([k,raw,neg])=>`<div class="ln ${neg?'neg':''}"><span>${k}</span><span>${raw?esc(s[k]||'-'):neg?'- '+rp(s[k]):rp(s[k])}</span></div>`).join('')}
+ <div class="thp"><span>THP</span><span>${rp(s['THP'])}</span></div>
+ ${D.spv?'':`<div class="row"><button class="btn" onclick="dl('${esc(s['Periode'])}')">⬇ Download PDF</button></div>`}</div>`}
+
+$('per').onchange=()=>{per=$('per').value;render()};
+setInterval(()=>{if(tok&&D)load(true)},120000);
+if(tok)load();
+
+// Stiker senyum bergerak tiap 3 detik
+const EM=['😊','😄','🥰','😁','🤗'];let ei=0;
+setInterval(()=>{const s=$('st');s.classList.remove('go');void s.offsetWidth;ei=(ei+1)%EM.length;s.textContent=EM[ei];s.classList.add('go')},3000);
+
+// Ganti password
+const mo=v=>$('md').classList.toggle('hide',!v);
+$('cp').onclick=()=>{['o','n','n2'].forEach(i=>$(i).value='');$('me').textContent='';mo(1)};$('mc').onclick=()=>mo(0);
+$('ms').onclick=async()=>{
+ if($('n').value!==$('n2').value){$('me').textContent='Konfirmasi password tidak sama';return}
+ $('ms').innerHTML='<span class="spin"></span>';
+ try{const r=await rpc('changePassword',tok,$('o').value,$('n').value);
+  if(r.ok){mo(0);alert('Password berhasil diubah')}else $('me').textContent=r.msg}
+ catch(e){$('me').textContent='Gagal menyimpan, coba lagi'}
+ $('ms').textContent='Simpan'};
+
+// PDF + watermark logo & nama perusahaan
+function dl(pr){
+ const s=D.slips.find(x=>x['Periode']===pr),{jsPDF}=window.jspdf,d=new jsPDF({unit:'mm',format:'a4'});
+ d.saveGraphicsState();d.setGState(new d.GState({opacity:.07}));
+ if(LOGO&&LD){const w=110,h=w*LD.h/LD.w;d.addImage(LOGO,'PNG',105-w/2,120-h/2,w,h)}
+ d.setFontSize(30);d.setFont('helvetica','bold');d.setTextColor(60,60,100);
+ d.text(COMPANY.toUpperCase(),105,175,{angle:35,align:'center'});
+ d.restoreGraphicsState();
+ let y=18;
+ if(LOGO&&LD){const h=18,w=Math.min(40,h*LD.w/LD.h);d.addImage(LOGO,'PNG',15,y-6,w,h)}
+ d.setTextColor(20,20,50);d.setFontSize(15);d.setFont('helvetica','bold');d.text(COMPANY,60,y+2);
+ d.setFontSize(10);d.setFont('helvetica','normal');d.text('SLIP GAJI KARYAWAN · '+s['Periode'],60,y+9);
+ d.setDrawColor(99,102,241);d.setLineWidth(.8);d.line(15,y+16,195,y+16);y+=26;
+ [['Nama',s.Nama],['NIK',s['NIP']],['Jabatan',s.Jabatan+' / '+s.Departemen],['Bank',s.Bank+' - '+s.Rek]].forEach(([a,b])=>{
+  d.text(a,15,y);d.text(': '+b,45,y);y+=7});
+ y+=4;d.setFont('helvetica','bold');d.setFillColor(99,102,241);d.setTextColor(255);d.rect(15,y-5,180,8,'F');
+ d.text('Komponen',18,y+.5);d.text('Jumlah',192,y+.5,{align:'right'});y+=10;d.setTextColor(20,20,50);d.setFont('helvetica','normal');
+ F.forEach(([k,raw,neg])=>{d.text(k,18,y);d.text(raw?String(s[k]||'-'):(neg?'- ':'')+rp(s[k]),192,y,{align:'right'});d.setDrawColor(200);d.setLineWidth(.1);d.line(15,y+2.5,195,y+2.5);y+=8});
+ y+=2;d.setFillColor(6,182,212);d.rect(15,y-5,180,10,'F');d.setTextColor(255);d.setFont('helvetica','bold');d.setFontSize(12);
+ d.text('TAKE HOME PAY (THP)',18,y+1.5);d.text(rp(s['THP']),192,y+1.5,{align:'right'});
+ d.setTextColor(120);d.setFont('helvetica','italic');d.setFontSize(8);
+ d.text('Dokumen ini diterbitkan secara elektronik oleh '+COMPANY+' dan sah tanpa tanda tangan basah.',105,285,{align:'center'});
+ d.save('Slip_Gaji_'+s['NIP']+'_'+s['Periode'].replace(/\s+/g,'_')+'.pdf')}
+</script></body></html>
