@@ -51,6 +51,7 @@ select option{color:#000}
 .thp{margin-top:12px;padding:14px;border-radius:16px;background:linear-gradient(135deg,var(--c1),var(--c2));display:flex;justify-content:space-between;align-items:center;font-weight:800}
 .thp span:last-child{font-size:clamp(17px,5.5vw,22px)}
 .upd{text-align:center;color:var(--mu);font-size:11px}
+.lock{text-align:center;padding:30px 16px}.lock .em{font-size:46px;display:inline-block;animation:wig 3s infinite}.lock h2{margin-top:6px}
 .empty{text-align:center;color:var(--mu);padding:26px 10px;font-size:14px}
 .modal{position:fixed;inset:0;z-index:5;background:rgba(15,23,42,.45);display:grid;place-items:center;padding:18px}
 .modal .card{width:100%;max-width:400px}
@@ -125,7 +126,7 @@ async function setLogo(src){if(!src)return;const k='v2'+src.length+src.slice(200
 useLogo(ls('lp'));
 rpc('pub').then(p=>{COMPANY=p.company;$('cn').textContent=p.company;setLogo(p.logo)}).catch(()=>{});
 
-function apply(d){D=d;if(!d.periods.includes(per))per=d.periods[d.periods.length-1];FOTO=ls('f_'+d.me.nik)||'';render();
+function apply(d){D=d;if(!d.periods.some(x=>x.p===per)){const ok=d.periods.filter(x=>!x.locked);per=(ok.length?ok:d.periods).slice(-1)[0].p}FOTO=ls('f_'+d.me.nik)||'';render();
  if(!imgDone){imgDone=1;rpc('getImages',tok).then(r=>{if(r.foto){FOTO=r.foto;ls('f_'+D.me.nik,r.foto)}if(r.logo)return setLogo(r.logo)}).then(()=>render()).catch(()=>{})}}
 
 $('lb').onclick=async()=>{
@@ -147,9 +148,9 @@ function render(){
  $('login').classList.add('hide');$('dash').classList.remove('hide');
  const m=D.me;$('nm').textContent=m.nama;$('ds').textContent=m.nik+' · '+m.dept;$('tg').textContent=m.jabatan;
  const av=$('ava'),k=FOTO||'-';if(av.dataset.k!==k){av.dataset.k=k;av.innerHTML=FOTO?`<img src="${FOTO}" alt="">`:esc((m.nama||'?').trim()[0])}
- $('per').innerHTML=[...D.periods].reverse().map(p=>`<option ${p===per?'selected':''}>${esc(p)}</option>`).join('');
- const sl=D.slips.filter(s=>s['Periode']===per);
- $('slips').innerHTML=sl.length?sl.map((s,i)=>slipHtml(s,i)).join(''):'<div class="card empty">Belum ada slip gaji untuk periode ini</div>';
+ $('per').innerHTML=[...D.periods].reverse().map(x=>`<option value="${esc(x.p)}" ${x.p===per?'selected':''}>${esc(x.p)}${x.locked?' 🔒':''}</option>`).join('');
+ const sl=D.slips.filter(s=>s['Periode']===per),pi=D.periods.find(x=>x.p===per);
+ $('slips').innerHTML=pi&&pi.locked?`<div class="card lock"><div class="em">⏳</div><h2>Data belum muncul</h2><p class="sub" style="margin:8px 0 0">Slip gaji periode ${esc(per)} akan tampil otomatis pada tanggal ${esc(pi.rel)}.<br>Terimakasih sudah bekerja semaksimal mungkin 😊</p></div>`:sl.length?sl.map((s,i)=>slipHtml(s,i)).join(''):'<div class="card empty">Belum ada slip gaji untuk periode ini</div>';
  $('up').textContent='Diperbarui otomatis tiap 2 menit · terakhir '+new Date().toLocaleTimeString('id-ID')}
 
 const F=[['Gaji Pokok'],['BPJS'],['Bensin'],['Sewa Motor'],['Perolehan Poin',1],['Bonus Poin'],['Total Salary'],['PPh21 (2,5%)',0,1]];
