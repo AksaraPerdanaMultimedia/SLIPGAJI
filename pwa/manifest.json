@@ -1,0 +1,16 @@
+{
+  "name": "Slip Gaji APM",
+  "short_name": "Slip Gaji",
+  "description": "Slip gaji karyawan PT Aksara Perdana Multimedia",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f3f5ff",
+  "theme_color": "#f3f5ff",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
