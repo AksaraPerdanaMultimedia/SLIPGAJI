@@ -24,6 +24,7 @@ jobs:
         run: |
           mkdir _site
           sed "s#__API_URL__#${WEBAPP_URL}#" src/index.html > _site/index.html
+          cp -r pwa/. _site/
           touch _site/.nojekyll
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
