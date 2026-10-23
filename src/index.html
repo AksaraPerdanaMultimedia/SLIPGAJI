@@ -2,6 +2,9 @@
 <html lang="id"><head><base target="_top"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f3f5ff">
+<link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="Slip Gaji">
 <title>Slip Gaji</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
@@ -57,7 +60,19 @@ select option{color:#000}
 .modal .card{width:100%;max-width:400px}
 .spin{width:18px;height:18px;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;display:inline-block;animation:r .7s linear infinite;vertical-align:middle}
 @keyframes r{to{transform:rotate(360deg)}}
+.top{background:linear-gradient(135deg,rgba(99,102,241,.16),rgba(6,182,212,.14))}
+body{overscroll-behavior-y:contain;-webkit-user-select:none;user-select:none}input{-webkit-user-select:text;user-select:text}
+#dash{padding-bottom:calc(92px + env(safe-area-inset-bottom))}
+.tabs{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom));width:min(92vw,420px);display:flex;gap:6px;padding:6px;border-radius:22px;background:rgba(255,255,255,.9);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(99,102,241,.18);box-shadow:0 10px 30px rgba(79,70,229,.22);z-index:4}
+.tabs button{flex:1;border:0;background:none;padding:12px 0;border-radius:16px;font-weight:700;font-size:14px;color:var(--mu);transition:.25s;cursor:pointer}
+.tabs button.on{background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff;box-shadow:0 6px 16px rgba(99,102,241,.4)}
+#vSlip,#vAkun{display:flex;flex-direction:column;gap:14px;animation:up .45s both}
+.ins{margin-top:10px;background:none;border:0;color:var(--c1);font-weight:700;font-size:13px;cursor:pointer}
+.kv{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px dashed rgba(99,102,241,.22);font-size:14px}.kv span:first-child{color:var(--mu)}
+#spl{position:fixed;inset:0;z-index:20;background:var(--bg);display:grid;place-content:center;justify-items:center;gap:14px;text-align:center;transition:opacity .5s}
+#spl.out{opacity:0;pointer-events:none}#spl img{width:110px;height:110px;object-fit:contain;animation:pulse 2s infinite}#spl b{font-size:18px}
 </style></head><body>
+<div id="spl"><img id="sl" class="hide" alt=""><b>PT Aksara Perdana Multimedia</b><span class="spin" style="border-color:rgba(99,102,241,.25);border-top-color:#6366f1"></span></div>
 <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
 
 <div class="wrap" id="login">
@@ -69,6 +84,7 @@ select option{color:#000}
   <input id="pw" type="password" placeholder="Password" autocomplete="current-password">
   <div class="err" id="le"></div>
   <button class="btn" id="lb">Masuk</button>
+  <button class="ins">📲 Pasang aplikasi di HP</button>
  </div>
 </div>
 
@@ -77,15 +93,28 @@ select option{color:#000}
   <div class="ava" id="ava"></div>
   <div class="who"><b id="nm"></b><span id="ds"></span><br><span class="tag" id="tg"></span></div>
  </div>
- <div class="card">
-  <h2 style="margin-bottom:10px">Periode Gaji</h2>
-  <select id="per"></select>
+ <div id="vSlip">
+  <div class="card">
+   <h2 style="margin-bottom:10px">Periode Gaji</h2>
+   <select id="per"></select>
+  </div>
+  <div id="slips"></div>
+  <div class="upd" id="up"></div>
  </div>
- <div id="slips"></div>
- <div class="card"><div class="row" style="margin:0">
-  <button class="btn ghost" id="cp">🔑 Ganti Password</button>
-  <button class="btn ghost" id="lo">Keluar</button></div></div>
- <div class="upd" id="up"></div>
+ <div id="vAkun" class="hide">
+  <div class="card">
+   <h2 style="margin-bottom:6px">Profil</h2>
+   <div class="kv"><span>NIK</span><b id="kn"></b></div>
+   <div class="kv"><span>Departemen</span><b id="kd"></b></div>
+   <div class="kv" style="border:0"><span>Jabatan</span><b id="kj"></b></div>
+  </div>
+  <div class="card">
+   <button class="btn ghost" id="cp">🔑 Ganti Password</button>
+   <button class="btn ghost ins" style="margin-top:10px;color:var(--tx)">📲 Pasang aplikasi di HP</button>
+   <button class="btn" id="lo" style="margin-top:10px">Keluar</button>
+  </div>
+ </div>
+ <nav class="tabs"><button id="t1" class="on">🧾 Slip Gaji</button><button id="t2">👤 Akun</button></nav>
 </div>
 
 <div class="modal hide" id="md"><div class="card">
@@ -117,7 +146,7 @@ function whiten(src){return new Promise(ok=>{const i=new Image();i.onload=()=>{t
  if(x2<=x1)return ok(src);
  const cx=(x1+x2)/2,cy=(y1+y2)/2,S=Math.round(Math.max(x2-x1,y2-y1)+2),c=document.createElement('canvas');c.width=c.height=S;const x=c.getContext('2d');
  x.beginPath();x.arc(S/2,S/2,S/2,0,7);x.clip();x.drawImage(i,S/2-cx,S/2-cy);ok(c.toDataURL('image/png'))}catch(e){ok(src)}};i.onerror=()=>ok(src);i.src=src})}
-function useLogo(p){if(!p||p===LOGO)return;LOGO=p;$('lg').src=p;$('lg').classList.remove('hide');
+function useLogo(p){if(!p||p===LOGO)return;LOGO=p;$('lg').src=p;$('sl').src=p;$('sl').classList.remove('hide');$('lg').classList.remove('hide');
  const i=new Image();i.onload=()=>{LD={w:i.width,h:i.height};if(D)render()};i.src=p}
 async function setLogo(src){if(!src)return;const k='v2'+src.length+src.slice(200,230);
  let p=ls('lk')===k?ls('lp'):null;if(!p){p=await whiten(src);ls('lk',k);ls('lp',p)}useLogo(p)}
@@ -135,8 +164,10 @@ $('lb').onclick=async()=>{
  $('lb').textContent='Masuk'};
 $('pw').onkeydown=e=>{if(e.key==='Enter')$('lb').click()};
 
-function out(){sessionStorage.removeItem('tok');tok=null;D=null;per='';$('dash').classList.add('hide');$('login').classList.remove('hide');$('pw').value=''}
+function out(){tab(1);sessionStorage.removeItem('tok');tok=null;D=null;per='';$('dash').classList.add('hide');$('login').classList.remove('hide');$('pw').value=''}
 $('lo').onclick=out;
+const tab=n=>{$('vSlip').classList.toggle('hide',n!==1);$('vAkun').classList.toggle('hide',n!==2);$('t1').classList.toggle('on',n===1);$('t2').classList.toggle('on',n===2);scrollTo(0,0)};
+$('t1').onclick=()=>tab(1);$('t2').onclick=()=>tab(2);
 
 async function load(silent){
  try{apply(await rpc('getData',tok))}
@@ -144,7 +175,7 @@ async function load(silent){
 
 function render(){
  $('login').classList.add('hide');$('dash').classList.remove('hide');
- const m=D.me;$('nm').textContent=m.nama;$('ds').textContent=m.nik+' · '+m.dept;$('tg').textContent=m.jabatan;
+ const m=D.me;$('kn').textContent=m.nik;$('kd').textContent=m.dept;$('kj').textContent=m.jabatan;$('nm').textContent=m.nama;$('ds').textContent=m.nik+' · '+m.dept;$('tg').textContent=m.jabatan;
  const av=$('ava'),k=FOTO||'-';if(av.dataset.k!==k){av.dataset.k=k;av.innerHTML=FOTO?`<img src="${FOTO}" alt="">`:esc((m.nama||'?').trim()[0])}
  $('per').innerHTML=[...D.periods].reverse().map(x=>`<option value="${esc(x.p)}" ${x.p===per?'selected':''}>${esc(x.p)}${x.locked?' 🔒':''}</option>`).join('');
  const sl=D.slips.filter(s=>s['Periode']===per),pi=D.periods.find(x=>x.p===per);
@@ -161,6 +192,14 @@ function slipHtml(s,i){
 
 $('per').onchange=()=>{per=$('per').value;render()};
 setInterval(()=>{if(tok&&D)load(true)},120000);
+// Splash + pasang aplikasi (PWA)
+setTimeout(()=>{$('spl').classList.add('out');setTimeout(()=>$('spl').remove(),600)},1300);
+const web=/^http/.test(location.protocol)&&!(window.google&&google.script);
+if(web&&'serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+let dp=null;addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e});
+const sa=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+document.querySelectorAll('.ins').forEach(b=>{if(sa||!web)b.classList.add('hide');
+ b.onclick=()=>{if(dp){dp.prompt();dp=null}else alert(/iphone|ipad|ipod/i.test(navigator.userAgent)?'Di iPhone/iPad: buka lewat Safari, ketuk ikon Bagikan (kotak dengan panah ke atas), lalu pilih "Tambah ke Layar Utama".':'Buka menu browser (⋮), lalu pilih "Pasang aplikasi" atau "Tambahkan ke layar utama".')}});
 if(tok)load();
 
 // Ganti password
