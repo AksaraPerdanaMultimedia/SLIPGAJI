@@ -103,7 +103,7 @@ function build_(u) {
   return {
     spv, slips, periods,
     me: { nik: u['NIK'], nama: u['Nama Karyawan'], jabatan: u['Jabatan'], dept: u['Departemen'],
-      namaRek: me['Nama Rekening'] || u['Nama Karyawan'], bank: me['Bank'] || '', rek: me['No Rekening'] || '',
+      hasFoto: !!me['Foto Karyawan'], namaRek: me['Nama Rekening'] || u['Nama Karyawan'], bank: me['Bank'] || '', rek: me['No Rekening'] || '',
       pwLog: JSON.parse(PropertiesService.getScriptProperties().getProperty('P_' + u['Akun']) || '[]') }
   };
 }
