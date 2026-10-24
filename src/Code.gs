@@ -103,7 +103,8 @@ function build_(u) {
   return {
     spv, slips, periods,
     me: { nik: u['NIK'], nama: u['Nama Karyawan'], jabatan: u['Jabatan'], dept: u['Departemen'],
-      namaRek: me['Nama Rekening'] || u['Nama Karyawan'], bank: me['Bank'] || '', rek: me['No Rekening'] || '' }
+      namaRek: me['Nama Rekening'] || u['Nama Karyawan'], bank: me['Bank'] || '', rek: me['No Rekening'] || '',
+      pwLog: JSON.parse(PropertiesService.getScriptProperties().getProperty('P_' + u['Akun']) || '[]') }
   };
 }
 
@@ -168,7 +169,10 @@ function changePassword(t, oldPw, newPw) {
     const col = tbl_('Users', 'Akun').head.indexOf('Password') + 1;
     sheet_('Users').getRange(u._row, col).setNumberFormat('@').setValue(newPw);
     CacheService.getScriptCache().remove('t_Users');
-    PropertiesService.getScriptProperties().deleteProperty('D_' + u['Akun']); // cabut semua sidik jari terdaftar
+    const P = PropertiesService.getScriptProperties();
+    P.deleteProperty('D_' + u['Akun']); // cabut semua sidik jari terdaftar
+    const log = JSON.parse(P.getProperty('P_' + u['Akun']) || '[]'); log.push(Date.now());
+    P.setProperty('P_' + u['Akun'], JSON.stringify(log.slice(-10))); // riwayat waktu ganti password (untuk Beranda)
   } finally { lock.releaseLock(); }
   return { ok: true };
 }
