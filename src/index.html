@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="id"><head><base target="_top"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#1e1b4b">
+<meta name="theme-color" content="#f2f8f4">
 <link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icons/icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="Slip Gaji">
@@ -9,7 +9,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
-:root{--bg:#f5f3ff;--p1:#7c3aed;--p2:#4f46e5;--cy:#06b6d4;--pk:#ec4899;--tx:#1e1b4b;--mu:#6b7280;--ln:rgba(124,58,237,.16)}
+:root{--bg:#f2f8f4;--p1:#1db954;--p2:#1aa34a;--cy:#1ed760;--pk:#169c46;--tx:#121212;--mu:#5f6b64;--ln:rgba(29,185,84,.22)}
 html,body{height:100%}
 body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--tx);min-height:100dvh;overflow-x:hidden;overscroll-behavior-y:contain;-webkit-user-select:none;user-select:none;padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left)}
 input{-webkit-user-select:text;user-select:text}
@@ -19,71 +19,73 @@ input{-webkit-user-select:text;user-select:text}
 .wrap{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:clamp(12px,4vw,22px);min-height:100dvh;display:flex;flex-direction:column;gap:14px}
 #dash{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
 .hide{display:none!important}
-.card{background:rgba(255,255,255,.82);border:1px solid var(--ln);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:24px;padding:clamp(16px,4.5vw,22px);box-shadow:0 12px 40px rgba(79,70,229,.14);animation:up .6s both}
+.card{background:rgba(255,255,255,.82);border:1px solid var(--ln);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:24px;padding:clamp(16px,4.5vw,22px);box-shadow:0 12px 40px rgba(18,18,18,.09);animation:up .6s both}
 @keyframes up{from{opacity:0;transform:translateY(18px)}}
-.hero{position:relative;overflow:hidden;color:#fff;border-radius:28px;padding:20px;background:linear-gradient(135deg,#1e1b4b 0%,#4c1d95 55%,#7c3aed 100%);box-shadow:0 18px 44px rgba(76,29,149,.45);animation:up .6s both}
+.hero{position:relative;overflow:hidden;color:#fff;border-radius:28px;padding:20px;background:linear-gradient(135deg,#0e6b2e 0%,#14903f 55%,#1db954 100%);box-shadow:0 18px 44px rgba(29,185,84,.38);animation:up .6s both}
 .hero::before,.hero::after{content:"";position:absolute;border-radius:50%;pointer-events:none}
-.hero::before{width:190px;height:190px;right:-60px;top:-70px;background:radial-gradient(circle,rgba(6,182,212,.55),transparent 70%)}
-.hero::after{width:160px;height:160px;left:-50px;bottom:-80px;background:radial-gradient(circle,rgba(236,72,153,.5),transparent 70%)}
+.hero::before{width:190px;height:190px;right:-60px;top:-70px;background:radial-gradient(circle,rgba(255,255,255,.28),transparent 70%)}
+.hero::after{width:160px;height:160px;left:-50px;bottom:-80px;background:radial-gradient(circle,rgba(0,0,0,.28),transparent 70%)}
 .hero>*{position:relative;z-index:1}
-.clk{font-size:clamp(34px,11vw,46px);font-weight:800;letter-spacing:1px;line-height:1.1;background:linear-gradient(90deg,#fff,#a5f3fc);-webkit-background-clip:text;background-clip:text;color:transparent}
-.dt{font-size:13px;opacity:.85;margin-top:2px}
+.dt{font-size:14px;font-weight:600;letter-spacing:.4px;opacity:.95}
 .lh{text-align:center}
 .logo{width:clamp(84px,28vw,120px);height:clamp(84px,28vw,120px);object-fit:contain;margin:0 auto 10px;display:block;animation:pulse 3s infinite}
 @keyframes pulse{0%,100%{filter:drop-shadow(0 0 0 rgba(255,140,40,0))}50%{filter:drop-shadow(0 0 14px rgba(255,140,40,.7))}}
 h1{font-size:clamp(17px,5.2vw,22px)}h2{font-size:clamp(15px,4.5vw,18px)}
 .sub{opacity:.8;font-size:13px;margin:4px 0 12px}
 input,select{width:100%;padding:15px;border-radius:16px;border:1.5px solid var(--ln);background:#fff;color:var(--tx);font-size:16px;margin-bottom:10px;outline:none;transition:.25s}
-input:focus,select:focus{border-color:var(--p1);box-shadow:0 0 0 4px rgba(124,58,237,.18)}
-select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%237c3aed' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 16px center;font-weight:600}
+input:focus,select:focus{border-color:var(--p1);box-shadow:0 0 0 4px rgba(29,185,84,.18)}
+select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%231db954' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 16px center;font-weight:600}
 ::placeholder{color:#a1a1b5}
-.rip{position:relative;overflow:hidden}.rp{position:absolute;border-radius:50%;background:rgba(124,58,237,.3);transform:scale(0);animation:rp .65s ease-out;pointer-events:none}
+.rip{position:relative;overflow:hidden}.rp{position:absolute;border-radius:50%;background:rgba(29,185,84,.3);transform:scale(0);animation:rp .65s ease-out;pointer-events:none}
 .btn .rp,.tabs .on .rp{background:rgba(255,255,255,.45)}@keyframes rp{to{transform:scale(1);opacity:0}}
-.btn{width:100%;padding:15px;border:0;border-radius:16px;font-size:15px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--p1),var(--p2) 55%,var(--cy));box-shadow:0 8px 22px rgba(79,70,229,.38);cursor:pointer;transition:transform .15s,box-shadow .2s}
+.btn{width:100%;padding:15px;border:0;border-radius:16px;font-size:15px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--p1),var(--p2) 55%,var(--cy));box-shadow:0 8px 22px rgba(29,185,84,.4);cursor:pointer;transition:transform .15s,box-shadow .2s}
 .btn:active{transform:scale(.96)}.btn.ghost{background:#fff;color:var(--tx);border:1.5px solid var(--ln);box-shadow:none}
+.bio{display:grid;place-items:center;width:62px;height:62px;margin:14px auto 0;border-radius:50%;background:#fff;border:1.5px solid var(--ln);color:var(--p1);cursor:pointer;box-shadow:0 8px 20px rgba(29,185,84,.2);transition:transform .15s}.bio:active{transform:scale(.92)}.bio svg{width:34px;height:34px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .ins{display:block;margin:12px auto 0;background:none;border:0;color:var(--p1);font-weight:700;font-size:13px;cursor:pointer}
 .err{color:#e11d48;font-size:13px;min-height:18px;margin-bottom:6px;text-align:center}
-.lg{display:flex;justify-content:center;gap:8px;margin-top:12px}.lg button,.seg button{border:0;background:rgba(124,58,237,.1);color:var(--p1);font-weight:700;padding:7px 16px;border-radius:99px;cursor:pointer}
+.lg{display:flex;justify-content:center;gap:8px;margin-top:12px}.lg button,.seg button{border:0;background:rgba(29,185,84,.1);color:var(--p1);font-weight:700;padding:7px 16px;border-radius:99px;cursor:pointer}
 .lg button.on{background:var(--p1);color:#fff}
-.top{display:flex;align-items:center;gap:14px;margin-bottom:16px}
-.ava{width:64px;height:64px;border-radius:50%;flex:none;position:relative;overflow:hidden;border:3px solid #a5f3fc;background:linear-gradient(135deg,var(--p1),var(--pk));display:grid;place-items:center;font-weight:800;font-size:24px;animation:glow 3s infinite}
+.top{display:flex;align-items:center;gap:14px}
+.ava{width:64px;height:64px;border-radius:50%;flex:none;position:relative;overflow:hidden;border:3px solid rgba(255,255,255,.75);background:linear-gradient(135deg,var(--p1),var(--pk));display:grid;place-items:center;font-weight:800;font-size:24px;animation:glow 3s infinite}
 .ava img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top}
-@keyframes glow{50%{box-shadow:0 0 0 9px rgba(165,243,252,.22)}}
-.who{min-width:0;flex:1}.who b{display:block;font-size:clamp(15px,4.6vw,18px)}.who span{opacity:.8;font-size:12.5px}
-.tag{display:inline-block;margin-top:5px;padding:2px 11px;border-radius:99px;background:rgba(255,255,255,.18);font-size:11px;font-weight:600}
+@keyframes glow{50%{box-shadow:0 0 0 9px rgba(255,255,255,.22)}}
+.who{min-width:0;flex:1;display:flex;flex-direction:column;gap:3px}.who b{font-size:clamp(17px,5vw,20px);line-height:1.2}
+.hi{font-size:12.5px;opacity:.85}.pos{font-size:12px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:#d9ffe6}.ds{font-size:12.5px;opacity:.8}
+.sep{border:0;height:1px;background:rgba(255,255,255,.35);margin:14px 0 12px}.lh .sep{margin:12px 0}
+.ttl{font-size:13px;font-weight:700;letter-spacing:1.6px;margin-top:8px;opacity:.95}
 #vSlip,#vAkun{display:flex;flex-direction:column;gap:14px;animation:up .45s both}
 .slip .hd{display:flex;align-items:center;gap:10px;margin-bottom:8px}.slip .hd img{width:44px;height:44px;object-fit:contain}.slip .hd small{color:var(--mu);display:block;font-size:11px}
 .ln{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px dashed var(--ln);font-size:14px;animation:up .5s both;animation-delay:calc(var(--i)*50ms)}
-.ln span:first-child{color:var(--mu)}.ln.neg span:last-child{color:#e11d48}
-.thp{margin-top:14px;padding:16px;border-radius:18px;color:#fff;background:linear-gradient(135deg,#7c3aed,#ec4899 70%,#f59e0b);display:flex;justify-content:space-between;align-items:center;font-weight:800;box-shadow:0 10px 26px rgba(236,72,153,.35)}
+.ln span:first-child{color:var(--mu)}.ln.neg span:last-child{color:var(--tx);font-weight:600}
+.thp{margin-top:14px;padding:16px;border-radius:18px;color:#fff;background:linear-gradient(135deg,#14903f,#1db954 65%,#1ed760);display:flex;justify-content:space-between;align-items:center;font-weight:800;box-shadow:0 10px 26px rgba(29,185,84,.35)}
 .thp span:last-child{font-size:clamp(18px,5.8vw,24px)}
 .empty{text-align:center;color:var(--mu);padding:26px 10px;font-size:14px}
-.lock{text-align:center;padding:30px 16px}.lock .em{font-size:46px;display:inline-block;animation:wig 3s infinite}.lock h2{margin-top:6px}.lock p{color:var(--mu);font-size:13.5px;margin-top:8px;line-height:1.5}
+.lock{text-align:center;padding:30px 16px}.lock .em{display:inline-block;color:var(--p1);animation:wig 3s infinite}.lock .em svg{width:54px;height:54px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}.lock h2{margin-top:6px}.lock p{color:var(--mu);font-size:13.5px;margin-top:8px;line-height:1.5}
 @keyframes wig{0%,60%,100%{transform:rotate(0) scale(1)}15%{transform:rotate(-14deg) scale(1.25)}30%{transform:rotate(12deg) scale(1.2)}45%{transform:rotate(-6deg) scale(1.1)}}
 .menu{padding:8px}
 .mi{display:flex;align-items:center;gap:14px;width:100%;padding:14px;border:0;background:none;border-radius:18px;font-size:15px;font-weight:600;color:var(--tx);text-align:left;cursor:pointer;transition:background .25s,transform .15s;animation:up .5s both;animation-delay:calc(var(--i)*60ms)}
-.mi:active{transform:scale(.97);background:rgba(124,58,237,.1)}.mi i{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;font-style:normal;font-size:20px;box-shadow:0 6px 14px rgba(0,0,0,.15);transition:transform .3s}
-.mi:active i{transform:rotate(-12deg) scale(1.15)}.mi span{flex:1}.mi em{font-style:normal;color:var(--mu);transition:transform .25s}.mi:active em{transform:translateX(5px)}
-.tabs{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom));width:min(92vw,400px);display:flex;gap:6px;padding:6px;border-radius:24px;background:rgba(30,27,75,.94);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 14px 34px rgba(30,27,75,.5);z-index:4}
-.tabs button{flex:1;border:0;background:none;padding:13px 0;border-radius:18px;font-weight:700;font-size:14px;color:#c4b5fd;transition:.3s;cursor:pointer}
-.tabs button.on{background:linear-gradient(135deg,var(--p1),var(--pk));color:#fff;box-shadow:0 6px 18px rgba(236,72,153,.5)}
+.mi:active{transform:scale(.97);background:rgba(29,185,84,.1)}.mi i{width:32px;height:32px;display:grid;place-items:center;font-style:normal;color:var(--p1);transition:transform .3s}.mi svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.mi:active i{transform:scale(1.2) rotate(-8deg)}.mi span{flex:1}.mi em{font-style:normal;color:var(--mu);transition:transform .25s}.mi:active em{transform:translateX(5px)}
+.tabs{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom));width:min(92vw,400px);display:flex;gap:6px;padding:6px;border-radius:24px;background:rgba(18,18,18,.95);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 14px 34px rgba(0,0,0,.4);z-index:4}
+.tabs button{flex:1;border:0;background:none;padding:13px 0;border-radius:18px;font-weight:700;font-size:14px;color:#9ca3af;transition:.3s;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}
+.tabs button.on{background:linear-gradient(135deg,var(--p1),var(--pk));color:#fff;box-shadow:0 6px 18px rgba(29,185,84,.5)}.tabs svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 #sh{position:fixed;inset:0;z-index:30;display:flex;align-items:flex-end;justify-content:center}
-.bd{position:absolute;inset:0;background:rgba(15,10,40,.55);backdrop-filter:blur(4px);animation:fi .3s}@keyframes fi{from{opacity:0}}
+.bd{position:absolute;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);animation:fi .3s}@keyframes fi{from{opacity:0}}
 .sheet{position:relative;width:min(100%,520px);max-height:88dvh;overflow:auto;background:#fff;border-radius:30px 30px 0 0;padding:12px 20px calc(24px + env(safe-area-inset-bottom));animation:sl .45s cubic-bezier(.2,.9,.3,1.08)}
 @keyframes sl{from{transform:translateY(100%)}}@keyframes so{to{transform:translateY(100%)}}@keyframes fo{to{opacity:0}}
 #sh.out .sheet{animation:so .26s forwards}#sh.out .bd{animation:fo .26s forwards}
-.grab{width:44px;height:5px;border-radius:9px;background:#ddd6fe;margin:0 auto 12px}
+.grab{width:44px;height:5px;border-radius:9px;background:#cfe8d8;margin:0 auto 12px}
 .sh-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:18px}
-.x{width:36px;height:36px;border-radius:50%;border:0;background:rgba(124,58,237,.1);color:var(--p1);font-size:15px;cursor:pointer}
+.x{width:36px;height:36px;border-radius:50%;border:0;background:rgba(29,185,84,.1);color:var(--p1);font-size:15px;cursor:pointer}
 .kv{display:flex;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px dashed var(--ln);font-size:14.5px;animation:up .45s both;animation-delay:calc(var(--i)*70ms)}.kv span{color:var(--mu)}.kv b{text-align:right;word-break:break-all}
 .note{font-size:14px;line-height:1.55;color:var(--mu);margin-bottom:10px}.st{padding-left:20px;font-size:14px;line-height:1.7;margin-bottom:14px}.st li{animation:up .4s both}
 .pill{display:inline-block;padding:6px 14px;border-radius:99px;background:#f1f5f9;font-size:13px;font-weight:700;margin-bottom:14px}.pill.g{background:#dcfce7;color:#15803d}
-.seg{position:relative;display:flex;background:rgba(124,58,237,.1);border-radius:99px;padding:4px}
-.seg i{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:99px;background:linear-gradient(135deg,var(--p1),var(--cy));box-shadow:0 6px 14px rgba(124,58,237,.4);transition:transform .35s cubic-bezier(.3,1.3,.5,1)}
+.seg{position:relative;display:flex;background:rgba(29,185,84,.1);border-radius:99px;padding:4px}
+.seg i{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:99px;background:linear-gradient(135deg,var(--p1),var(--cy));box-shadow:0 6px 14px rgba(29,185,84,.4);transition:transform .35s cubic-bezier(.3,1.3,.5,1)}
 .seg button{position:relative;flex:1;background:none;padding:12px;transition:color .3s}.seg button.on{color:#fff}
-#toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translate(-50%,30px);background:#1e1b4b;color:#fff;padding:12px 20px;border-radius:99px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:.35s;z-index:40;max-width:90vw;text-align:center}
+#toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translate(-50%,30px);background:#121212;color:#fff;padding:12px 20px;border-radius:99px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:.35s;z-index:40;max-width:90vw;text-align:center}
 #toast.on{opacity:1;transform:translate(-50%,0)}
-#spl{position:fixed;inset:0;z-index:50;background:linear-gradient(160deg,#1e1b4b,#4c1d95 60%,#7c3aed);color:#fff;display:grid;place-content:center;justify-items:center;gap:14px;text-align:center;transition:opacity .5s}
+#spl{position:fixed;inset:0;z-index:50;background:linear-gradient(160deg,#0e6b2e,#14903f 60%,#1db954);color:#fff;display:grid;place-content:center;justify-items:center;gap:14px;text-align:center;transition:opacity .5s}
 #spl.out{opacity:0;pointer-events:none}#spl img{width:110px;height:110px;object-fit:contain;animation:pulse 2s infinite}
 .spin{width:18px;height:18px;border:3px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;display:inline-block;animation:r .7s linear infinite;vertical-align:middle}@keyframes r{to{transform:rotate(360deg)}}
 </style></head><body>
@@ -93,14 +95,14 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
 <div class="wrap" id="login">
  <div class="hero lh">
   <img id="lg" class="logo hide" alt=""><h1 id="cn">PT Aksara Perdana Multimedia</h1>
-  <p class="sub" data-i="portal"></p><div class="clk"></div><div class="dt"></div>
+  <p class="ttl" data-i="portal"></p><hr class="sep"><div class="dt"></div>
  </div>
  <div class="card">
   <input id="ak" data-p="ph_ak" autocomplete="username" autocapitalize="off">
   <input id="pw" type="password" data-p="ph_pw" autocomplete="current-password">
   <div class="err" id="le"></div>
   <button class="btn rip" id="lb"></button>
-  <button class="btn ghost rip" id="bl" style="margin-top:10px">👆 <span data-i="bio"></span></button>
+  <button class="bio rip" id="bl" aria-label="Fingerprint"></button>
   <button class="ins" data-i="inst"></button>
   <div class="lg"><button data-l="id" class="rip">ID</button><button data-l="en" class="rip">EN</button></div>
  </div>
@@ -108,8 +110,8 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
 
 <div class="wrap hide" id="dash">
  <div class="hero">
-  <div class="top"><div class="ava" id="ava"></div><div class="who"><span id="hi"></span><b id="nm"></b><span id="ds"></span><br><span class="tag" id="tg"></span></div></div>
-  <div class="clk"></div><div class="dt"></div>
+  <div class="top"><div class="ava" id="ava"></div><div class="who"><span class="hi" id="hi"></span><b id="nm"></b><span class="pos" id="tg"></span><span class="ds" id="ds"></span></div></div>
+  <hr class="sep"><div class="dt"></div>
  </div>
  <div id="vSlip">
   <div class="card"><h2 style="margin-bottom:10px" data-i="period"></h2><select id="per"></select></div>
@@ -133,8 +135,8 @@ const rpc=(f,...a)=>(window.google&&google.script&&google.script.run)
 const web=/^http/.test(location.protocol)&&!(window.google&&google.script);
 const bioOK=web&&!!window.PublicKeyCredential;
 
-const I={id:{portal:'Portal Slip Gaji Karyawan',ph_ak:'Akun (NIK)',ph_pw:'Password',login:'Masuk',bio:'Masuk dengan Sidik Jari',inst:'📲 Pasang aplikasi di HP',e_login:'Akun atau password salah',e_net:'Gagal terhubung, coba lagi',e_dev:'Sidik jari tidak valid, silakan masuk dengan password',e_bio:'Verifikasi sidik jari dibatalkan atau gagal',tab1:'🧾 Slip Gaji',tab2:'👤 Akun',period:'Periode Gaji',none:'Belum ada slip gaji untuk periode ini',lk_t:'Data belum muncul',lk_d:'Slip gaji periode {p} akan tampil otomatis pada tanggal {d}.',thanks:'Terimakasih sudah bekerja semaksimal mungkin 😊',dl:'⬇ Download PDF',emp:'Karyawan',hello:'Halo,',m_profile:'Profil',m_payroll:'Info Payroll',m_fp:'Login Sidik Jari',m_pw:'Ganti Password',m_lang:'Pengaturan Bahasa',m_inst:'Pasang Aplikasi',m_out:'Keluar',nik:'NIK',dept:'Departemen',pos:'Jabatan',acc_name:'Nama Rekening',bank:'Nama Bank',acc_no:'Nomor Rekening',pw_old:'Password lama',pw_new:'Password baru (min. 6 karakter)',pw_new2:'Ulangi password baru',save:'Simpan',e_old:'Password lama salah',e_short:'Password baru minimal 6 karakter',e_mis:'Konfirmasi password tidak sama',s_pw:'Password berhasil diubah',fp_info:'Masuk cepat memakai sidik jari / Face ID yang sudah terdaftar di HP Anda.',fp_s1:'Pastikan sidik jari sudah diatur di pengaturan HP',fp_s2:'Masuk dulu dengan akun dan password',fp_s3:'Buka Akun → Login Sidik Jari → Daftarkan',fp_s4:'Selanjutnya cukup tempelkan jari untuk masuk',fp_reg:'Daftarkan Sidik Jari',fp_del:'Hapus Sidik Jari',fp_on:'Sidik jari aktif di HP ini',fp_off:'Belum terdaftar di HP ini',fp_ok:'Sidik jari berhasil didaftarkan',fp_gone:'Sidik jari dihapus',fp_nosup:'HP atau browser ini belum mendukung sidik jari',fp_go:'Tempelkan jari Anda pada sensor HP untuk masuk.',fp_cont:'Lanjutkan',fp_t:'Login Sidik Jari',ok:'Mengerti',lang_ok:'Bahasa: Indonesia',i_ios:'Di iPhone/iPad: buka lewat Safari, ketuk ikon Bagikan, lalu pilih "Tambah ke Layar Utama".',i_and:'Buka menu browser (⋮), lalu pilih "Pasang aplikasi" atau "Tambahkan ke layar utama".',p_title:'SLIP GAJI KARYAWAN',p_name:'Nama',p_pos:'Jabatan',p_comp:'Komponen',p_amt:'Jumlah',p_foot:'Dokumen ini diterbitkan secara elektronik oleh {c} dan sah tanpa tanda tangan basah.'},
-en:{portal:'Employee Payslip Portal',ph_ak:'Account (NIK)',login:'Sign in',bio:'Sign in with Fingerprint',inst:'📲 Install app on phone',e_login:'Wrong account or password',e_net:'Connection failed, try again',e_dev:'Fingerprint is not valid, please sign in with password',e_bio:'Fingerprint verification was cancelled or failed',tab1:'🧾 Payslip',tab2:'👤 Account',period:'Pay Period',none:'No payslip for this period yet',lk_t:'Data not available yet',lk_d:'The {p} payslip will appear automatically on {d}.',thanks:'Thank you for your hard work 😊',dl:'⬇ Download PDF',emp:'Employee',hello:'Hello,',m_profile:'Profile',m_payroll:'Payroll Info',m_fp:'Fingerprint Login',m_pw:'Change Password',m_lang:'Language Settings',m_inst:'Install App',m_out:'Log out',dept:'Department',pos:'Position',acc_name:'Account Name',bank:'Bank Name',acc_no:'Account Number',pw_old:'Current password',pw_new:'New password (min. 6 characters)',pw_new2:'Repeat new password',save:'Save',e_old:'Current password is wrong',e_short:'New password must be at least 6 characters',e_mis:'Password confirmation does not match',s_pw:'Password changed successfully',fp_info:'Sign in quickly with the fingerprint / Face ID already registered on your phone.',fp_s1:'Make sure a fingerprint is set up in your phone settings',fp_s2:'Sign in first with your account and password',fp_s3:'Open Account → Fingerprint Login → Register',fp_s4:'After that, just touch the sensor to sign in',fp_reg:'Register Fingerprint',fp_del:'Remove Fingerprint',fp_on:'Fingerprint active on this phone',fp_off:'Not registered on this phone',fp_ok:'Fingerprint registered successfully',fp_gone:'Fingerprint removed',fp_nosup:'This phone or browser does not support fingerprint',fp_go:'Touch the fingerprint sensor on your phone to sign in.',fp_cont:'Continue',fp_t:'Fingerprint Login',ok:'Got it',lang_ok:'Language: English',i_ios:'On iPhone/iPad: open in Safari, tap the Share icon, then choose "Add to Home Screen".',i_and:'Open the browser menu (⋮), then choose "Install app" or "Add to home screen".',p_title:'EMPLOYEE PAYSLIP',p_name:'Name',p_pos:'Position',p_comp:'Component',p_amt:'Amount',p_foot:'This document is issued electronically by {c} and is valid without a wet signature.'}};
+const I={id:{portal:'APLIKASI SLIP GAJI KARYAWAN',ph_ak:'Akun (NIK)',ph_pw:'Password',login:'Masuk',bio:'Masuk dengan Sidik Jari',inst:'Pasang aplikasi di HP',e_login:'Akun atau password salah',e_net:'Gagal terhubung, coba lagi',e_dev:'Sidik jari tidak valid, silakan masuk dengan password',e_bio:'Verifikasi sidik jari dibatalkan atau gagal',tab1:'Slip Gaji',tab2:'Akun',period:'Periode Gaji',none:'Belum ada slip gaji untuk periode ini',lk_t:'Data belum muncul',lk_d:'Slip gaji periode {p} akan tampil otomatis pada tanggal {d}.',thanks:'Terimakasih sudah bekerja semaksimal mungkin 😊',dl:'Download PDF',emp:'Karyawan',hello:'Halo,',m_profile:'Profil',m_payroll:'Info Payroll',m_fp:'Login Sidik Jari',m_pw:'Ganti Password',m_lang:'Pengaturan Bahasa',m_inst:'Pasang Aplikasi',m_out:'Keluar',nik:'NIK',dept:'Departemen',pos:'Jabatan',acc_name:'Nama Rekening',bank:'Nama Bank',acc_no:'Nomor Rekening',pw_old:'Password lama',pw_new:'Password baru (min. 6 karakter)',pw_new2:'Ulangi password baru',save:'Simpan',e_old:'Password lama salah',e_short:'Password baru minimal 6 karakter',e_mis:'Konfirmasi password tidak sama',s_pw:'Password berhasil diubah',fp_info:'Masuk cepat memakai sidik jari / Face ID yang sudah terdaftar di HP Anda.',fp_s1:'Pastikan sidik jari sudah diatur di pengaturan HP',fp_s2:'Masuk dulu dengan akun dan password',fp_s3:'Buka Akun → Login Sidik Jari → Daftarkan',fp_s4:'Selanjutnya cukup tempelkan jari untuk masuk',fp_reg:'Daftarkan Sidik Jari',fp_del:'Hapus Sidik Jari',fp_on:'Sidik jari aktif di HP ini',fp_off:'Belum terdaftar di HP ini',fp_ok:'Sidik jari berhasil didaftarkan',fp_gone:'Sidik jari dihapus',fp_nosup:'HP atau browser ini belum mendukung sidik jari',fp_go:'Tempelkan jari Anda pada sensor HP untuk masuk.',fp_cont:'Lanjutkan',fp_t:'Login Sidik Jari',ok:'Mengerti',lang_ok:'Bahasa: Indonesia',i_ios:'Di iPhone/iPad: buka lewat Safari, ketuk ikon Bagikan, lalu pilih "Tambah ke Layar Utama".',i_and:'Buka menu browser (⋮), lalu pilih "Pasang aplikasi" atau "Tambahkan ke layar utama".',p_title:'SLIP GAJI KARYAWAN',p_name:'Nama',p_pos:'Jabatan',p_comp:'Komponen',p_amt:'Jumlah',p_foot:'Dokumen ini diterbitkan secara elektronik oleh {c} dan sah tanpa tanda tangan basah.'},
+en:{portal:'EMPLOYEE PAYSLIP APPLICATION',ph_ak:'Account (NIK)',login:'Sign in',bio:'Sign in with Fingerprint',inst:'Install app on phone',e_login:'Wrong account or password',e_net:'Connection failed, try again',e_dev:'Fingerprint is not valid, please sign in with password',e_bio:'Fingerprint verification was cancelled or failed',tab1:'Payslip',tab2:'Account',period:'Pay Period',none:'No payslip for this period yet',lk_t:'Data not available yet',lk_d:'The {p} payslip will appear automatically on {d}.',thanks:'Thank you for your hard work 😊',dl:'Download PDF',emp:'Employee',hello:'Hello,',m_profile:'Profile',m_payroll:'Payroll Info',m_fp:'Fingerprint Login',m_pw:'Change Password',m_lang:'Language Settings',m_inst:'Install App',m_out:'Log out',dept:'Department',pos:'Position',acc_name:'Account Name',bank:'Bank Name',acc_no:'Account Number',pw_old:'Current password',pw_new:'New password (min. 6 characters)',pw_new2:'Repeat new password',save:'Save',e_old:'Current password is wrong',e_short:'New password must be at least 6 characters',e_mis:'Password confirmation does not match',s_pw:'Password changed successfully',fp_info:'Sign in quickly with the fingerprint / Face ID already registered on your phone.',fp_s1:'Make sure a fingerprint is set up in your phone settings',fp_s2:'Sign in first with your account and password',fp_s3:'Open Account → Fingerprint Login → Register',fp_s4:'After that, just touch the sensor to sign in',fp_reg:'Register Fingerprint',fp_del:'Remove Fingerprint',fp_on:'Fingerprint active on this phone',fp_off:'Not registered on this phone',fp_ok:'Fingerprint registered successfully',fp_gone:'Fingerprint removed',fp_nosup:'This phone or browser does not support fingerprint',fp_go:'Touch the fingerprint sensor on your phone to sign in.',fp_cont:'Continue',fp_t:'Fingerprint Login',ok:'Got it',lang_ok:'Language: English',i_ios:'On iPhone/iPad: open in Safari, tap the Share icon, then choose "Add to Home Screen".',i_and:'Open the browser menu (⋮), then choose "Install app" or "Add to home screen".',p_title:'EMPLOYEE PAYSLIP',p_name:'Name',p_pos:'Position',p_comp:'Component',p_amt:'Amount',p_foot:'This document is issued electronically by {c} and is valid without a wet signature.'}};
 let L=LS('lang')==='en'?'en':'id';
 const t=(k,o)=>{let s=I[L][k]??I.id[k]??k;for(const x in o)s=s.replace('{'+x+'}',o[x]);return s};
 const FLE={'Gaji Pokok':'Basic Salary','Bensin':'Fuel','Sewa Motor':'Motorcycle Rental','Perolehan Poin':'Points Earned','Bonus Poin':'Bonus Points','PPh21 (2,5%)':'Income Tax PPh 21 (2.5%)','THP':'Take Home Pay'};
@@ -145,11 +147,9 @@ const rp=v=>!v?'-':(/^Rp/.test(v)?v:'Rp '+v.replace(/,00$/,''));
 const loc=()=>L==='en'?'en-US':'id-ID';
 function tr(){qa('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));qa('[data-p]').forEach(e=>e.placeholder=t(e.dataset.p));document.documentElement.lang=L;
  qa('[data-l]').forEach(b=>b.classList.toggle('on',b.dataset.l===L));const sg=document.querySelector('.seg i');if(sg)sg.style.transform=`translateX(${L==='en'?100:0}%)`;
- $('t1').textContent=t('tab1');$('t2').textContent=t('tab2');if(!$('lb').querySelector('.spin'))$('lb').textContent=t('login');clock()}
-function clock(){const n=new Date(),z={timeZone:'Asia/Jakarta'};
- const c=n.toLocaleTimeString('en-GB',{...z,hour:'2-digit',minute:'2-digit'})+' WIB',d=n.toLocaleDateString(loc(),{...z,weekday:'long',day:'numeric',month:'long',year:'numeric'});
- qa('.clk').forEach(e=>e.textContent=c);qa('.dt').forEach(e=>e.textContent=d)}
-setInterval(clock,1000);
+ $('t1').innerHTML=ic('slip')+'<span>'+t('tab1')+'</span>';$('t2').innerHTML=ic('acc')+'<span>'+t('tab2')+'</span>';if(!$('lb').querySelector('.spin'))$('lb').textContent=t('login');clock()}
+function clock(){const d=new Date().toLocaleDateString(loc(),{timeZone:'Asia/Jakarta',weekday:'long',day:'numeric',month:'long',year:'numeric'});qa('.dt').forEach(e=>e.textContent=d)}
+setInterval(clock,60000);
 function setLang(l){L=l;LS('lang',l);tr();if(D){render();if(cur==='lang')$('sht').textContent=t('m_lang')}}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-l]');if(b&&b.dataset.l!==L)setLang(b.dataset.l)});
 // efek riak di semua elemen .rip
@@ -201,14 +201,14 @@ const steps=()=>`<p class="note">${t('fp_info')}</p><ol class="st">${[1,2,3,4].m
 const S={
  profile:()=>({t:t('m_profile'),h:kv(t('nik'),D.me.nik,0)+kv(t('dept'),D.me.dept,1)+kv(t('pos'),D.me.jabatan,2)}),
  payroll:()=>({t:t('m_payroll'),h:kv(t('acc_name'),D.me.namaRek,0)+kv(t('bank'),D.me.bank,1)+kv(t('acc_no'),D.me.rek,2)}),
- lang:()=>({t:t('m_lang'),h:`<div class="seg"><i style="transform:translateX(${L==='en'?100:0}%)"></i><button data-l="id" class="rip ${L==='id'?'on':''}">🇮🇩 Indonesia</button><button data-l="en" class="rip ${L==='en'?'on':''}">🇬🇧 English</button></div>`}),
+ lang:()=>({t:t('m_lang'),h:`<div class="seg"><i style="transform:translateX(${L==='en'?100:0}%)"></i><button data-l="id" class="rip ${L==='id'?'on':''}">Bahasa Indonesia</button><button data-l="en" class="rip ${L==='en'?'on':''}">English</button></div>`}),
  pw:()=>({t:t('m_pw'),h:`<input id="po" type="password" placeholder="${t('pw_old')}"><input id="pn" type="password" placeholder="${t('pw_new')}"><input id="pn2" type="password" placeholder="${t('pw_new2')}"><div class="err" id="pe"></div><button class="btn rip" id="ps">${t('save')}</button>`,
   i:()=>{$('ps').onclick=async()=>{if($('pn').value!==$('pn2').value){$('pe').textContent=t('e_mis');return}$('ps').innerHTML='<span class="spin"></span>';
    try{const r=await rpc('changePassword',tok,$('po').value,$('pn').value);if(r.ok){closeSheet();toast('✅ '+t('s_pw'))}else{$('pe').textContent=t(r.code==='old'?'e_old':'e_short');$('ps').textContent=t('save')}}catch(e){$('pe').textContent=t('e_net');$('ps').textContent=t('save')}}}}),
- fp:()=>{const on=!!LS('bio');return{t:t('m_fp'),h:steps()+`<div class="pill ${on?'g':''}">${on?'✅ '+t('fp_on'):'⚪ '+t('fp_off')}</div><button class="btn ${on?'ghost ':''}rip" id="fb">${on?t('fp_del'):'👆 '+t('fp_reg')}</button>`,
+ fp:()=>{const on=!!LS('bio');return{t:t('m_fp'),h:steps()+`<div class="pill ${on?'g':''}">${on?'✓ '+t('fp_on'):'○ '+t('fp_off')}</div><button class="btn ${on?'ghost ':''}rip" id="fb">${on?t('fp_del'):ic('fp')+' '+t('fp_reg')}</button>`,
   i:()=>{$('fb').onclick=async()=>{if(on){try{await rpc('unregDevice',JSON.parse(LS('bio')).dt)}catch(e){}LS('bio',null);toast(t('fp_gone'));sheet('fp');return}
    if(!bioOK){toast(t('fp_nosup'));return}try{await bioReg();toast('✅ '+t('fp_ok'));sheet('fp')}catch(e){toast(t('e_bio'))}}}}},
- fpl:()=>{const on=!!LS('bio');return{t:t('fp_t'),h:on?`<p class="note">${t('fp_go')}</p><button class="btn rip" id="fg">👆 ${t('fp_cont')}</button>`:steps()+`<button class="btn rip" id="fg">${t('ok')}</button>`,
+ fpl:()=>{const on=!!LS('bio');return{t:t('fp_t'),h:on?`<p class="note">${t('fp_go')}</p><button class="btn rip" id="fg">${t('fp_cont')}</button>`:steps()+`<button class="btn rip" id="fg">${t('ok')}</button>`,
   i:()=>{$('fg').onclick=()=>{closeSheet();if(on)setTimeout(bioLogin,280)}}}}
 };
 function sheet(k){cur=k;const s=S[k]();$('sht').textContent=s.t;$('shb').innerHTML=s.h;$('sh').classList.remove('hide','out');s.i&&s.i()}
@@ -218,8 +218,18 @@ let dp=null;addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e})
 const sa=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
 function instAct(){if(dp){dp.prompt();dp=null}else toast(/iphone|ipad|ipod/i.test(navigator.userAgent)?t('i_ios'):t('i_and'))}
 qa('.ins').forEach(b=>{if(sa||!web)b.classList.add('hide');b.onclick=instAct});
-const M=[['profile','👤','#6366f1,#8b5cf6'],['payroll','🏦','#10b981,#06b6d4'],['fp','👆','#f59e0b,#f97316',bioOK],['pw','🔑','#ec4899,#f43f5e'],['lang','🌐','#0ea5e9,#6366f1'],['inst','📲','#14b8a6,#22c55e',web&&!sa],['out','🚪','#64748b,#334155']];
-function menu(){const mk=L+sa;if($('menu').dataset.k===mk)return;$('menu').dataset.k=mk;let n=0;$('menu').innerHTML=M.filter(m=>m[3]===undefined||m[3]).map(m=>`<button class="mi rip" data-m="${m[0]}" style="--i:${n++}"><i style="background:linear-gradient(135deg,${m[2]})">${m[1]}</i><span>${t('m_'+m[0])}</span><em>›</em></button>`).join('');
+const IP={profile:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>',
+payroll:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8.5h3.2a1.6 1.6 0 0 1 0 3.2H9m0-3.2v6m3.2-2.8l2.3 2.8"/>',
+fp:'<path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/><path d="M2 12a10 10 0 0 1 18-6"/><path d="M2 16h.01"/><path d="M21.8 16c.2-2 .131-5.354 0-6"/><path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/><path d="M8.65 22c.21-.66.45-1.32.57-2"/><path d="M9 6.8a6 6 0 0 1 9 5.2v2"/>',
+pw:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/><circle cx="12" cy="16" r="1"/>',
+lang:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+inst:'<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M12 8v6m-3-3l3 3 3-3"/>',
+out:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/>'};
+IP.slip=IP.payroll;IP.acc=IP.profile;
+const ic=n=>`<svg viewBox="0 0 24 24">${IP[n]}</svg>`;
+$('bl').innerHTML=ic('fp');
+const M=[['profile'],['payroll'],['fp',bioOK],['pw'],['lang'],['inst',web&&!sa],['out']];
+function menu(){const mk=L+sa;if($('menu').dataset.k===mk)return;$('menu').dataset.k=mk;let n=0;$('menu').innerHTML=M.filter(m=>m[1]===undefined||m[1]).map(m=>`<button class="mi rip" data-m="${m[0]}" style="--i:${n++}"><i>${ic(m[0])}</i><span>${t('m_'+m[0])}</span><em>›</em></button>`).join('');
  qa('.mi').forEach(b=>b.onclick=()=>{const k=b.dataset.m;k==='out'?out():k==='inst'?instAct():setTimeout(()=>sheet(k),120)})}
 const tab=n=>{$('vSlip').classList.toggle('hide',n!==1);$('vAkun').classList.toggle('hide',n!==2);$('t1').classList.toggle('on',n===1);$('t2').classList.toggle('on',n===2);scrollTo(0,0)};
 $('t1').onclick=()=>tab(1);$('t2').onclick=()=>tab(2);
@@ -231,12 +241,12 @@ function render(){
  const sel=$('per'),oh=sel.innerHTML;const nh=[...D.periods].reverse().map(x=>`<option value="${esc(x.p)}" ${x.p===per?'selected':''}>${esc(pl(x.p))}${x.locked?' 🔒':''}</option>`).join('');if(oh!==nh)sel.innerHTML=nh;
  const sl=D.slips.filter(s=>s['Periode']===per),pi=D.periods.find(x=>x.p===per);
  const dtx=pi&&pi.rel?new Date(pi.rel+'T00:00:00+07:00').toLocaleDateString(loc(),{timeZone:'Asia/Jakarta',day:'numeric',month:'long',year:'numeric'}):'';
- const sh=pi&&pi.locked?`<div class="card lock"><div class="em">⏳</div><h2>${t('lk_t')}</h2><p>${t('lk_d',{p:esc(pl(per)),d:dtx})}<br>${t('thanks')}</p></div>`:sl.length?sl.map((s,i)=>slipHtml(s,i)).join(''):`<div class="card empty">${t('none')}</div>`;
+ const sh=pi&&pi.locked?`<div class="card lock"><div class="em">${ic('pw')}</div><h2>${t('lk_t')}</h2><p>${t('lk_d',{p:esc(pl(per)),d:dtx})}<br>${t('thanks')}</p></div>`:sl.length?sl.map((s,i)=>slipHtml(s,i)).join(''):`<div class="card empty">${t('none')}</div>`;
  if($('slips').dataset.h!==sh){$('slips').dataset.h=sh;$('slips').innerHTML=sh}
  menu()}
 const F=[['Gaji Pokok'],['BPJS'],['Bensin'],['Sewa Motor'],['Perolehan Poin',1],['Bonus Poin'],['Total Salary'],['PPh21 (2,5%)',0,1]];
 function slipHtml(s,i){
- return `<div class="card slip" style="animation-delay:${i*.08}s"><div class="hd">${LOGO?`<img src="${LOGO}">`:''}<div><b>${esc(COMPANY)}</b><small>${t('tab1').replace(/^\S+\s/,'')} · ${esc(pl(s['Periode']))}</small></div></div>
+ return `<div class="card slip" style="animation-delay:${i*.08}s"><div class="hd">${LOGO?`<img src="${LOGO}">`:''}<div><b>${esc(COMPANY)}</b><small>${t('tab1')} · ${esc(pl(s['Periode']))}</small></div></div>
  ${D.spv?`<div class="ln" style="--i:0"><span>${t('emp')}</span><span>${esc(s.Nama)}</span></div>`:''}
  ${F.map(([k,raw,neg],n)=>`<div class="ln ${neg?'neg':''}" style="--i:${n+1}"><span>${lab(k)}</span><span>${raw?esc(s[k]||'-'):neg?'- '+rp(s[k]):rp(s[k])}</span></div>`).join('')}
  <div class="thp"><span>${lab('THP')}</span><span>${rp(s['THP'])}</span></div>
@@ -252,11 +262,11 @@ function dl(pr){
  d.setFontSize(30);d.setFont('helvetica','bold');d.setTextColor(60,60,100);d.text(COMPANY.toUpperCase(),105,175,{angle:35,align:'center'});d.restoreGraphicsState();
  let y=18;if(LOGO&&LD){const h=18,w=Math.min(40,h*LD.w/LD.h);d.addImage(LOGO,'PNG',15,y-6,w,h)}
  d.setTextColor(20,20,50);d.setFontSize(15);d.text(COMPANY,60,y+2);d.setFontSize(10);d.setFont('helvetica','normal');d.text(t('p_title')+' · '+pl(s['Periode']),60,y+9);
- d.setDrawColor(124,58,237);d.setLineWidth(.8);d.line(15,y+16,195,y+16);y+=26;
+ d.setDrawColor(29,185,84);d.setLineWidth(.8);d.line(15,y+16,195,y+16);y+=26;
  [[t('p_name'),s.Nama],['NIK',s['NIP']],[t('p_pos'),s.Jabatan+' / '+s.Departemen],['Bank',s.Bank+' - '+s.Rek]].forEach(([a,b])=>{d.text(a,15,y);d.text(': '+b,45,y);y+=7});
- y+=4;d.setFont('helvetica','bold');d.setFillColor(124,58,237);d.setTextColor(255);d.rect(15,y-5,180,8,'F');d.text(t('p_comp'),18,y+.5);d.text(t('p_amt'),192,y+.5,{align:'right'});y+=10;d.setTextColor(20,20,50);d.setFont('helvetica','normal');
+ y+=4;d.setFont('helvetica','bold');d.setFillColor(29,185,84);d.setTextColor(255);d.rect(15,y-5,180,8,'F');d.text(t('p_comp'),18,y+.5);d.text(t('p_amt'),192,y+.5,{align:'right'});y+=10;d.setTextColor(20,20,50);d.setFont('helvetica','normal');
  F.forEach(([k,raw,neg])=>{d.text(lab(k),18,y);d.text(raw?String(s[k]||'-'):(neg?'- ':'')+rp(s[k]),192,y,{align:'right'});d.setDrawColor(200);d.setLineWidth(.1);d.line(15,y+2.5,195,y+2.5);y+=8});
- y+=2;d.setFillColor(236,72,153);d.rect(15,y-5,180,10,'F');d.setTextColor(255);d.setFont('helvetica','bold');d.setFontSize(12);d.text('TAKE HOME PAY (THP)',18,y+1.5);d.text(rp(s['THP']),192,y+1.5,{align:'right'});
+ y+=2;d.setFillColor(29,185,84);d.rect(15,y-5,180,10,'F');d.setTextColor(255);d.setFont('helvetica','bold');d.setFontSize(12);d.text('TAKE HOME PAY (THP)',18,y+1.5);d.text(rp(s['THP']),192,y+1.5,{align:'right'});
  d.setTextColor(120);d.setFont('helvetica','italic');d.setFontSize(8);d.text(t('p_foot',{c:COMPANY}),105,285,{align:'center'});
  d.save('Slip_Gaji_'+s['NIP']+'_'+s['Periode'].replace(/\s+/g,'_')+'.pdf')}
 
