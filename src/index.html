@@ -39,6 +39,7 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
 .rip{position:relative;overflow:hidden}.rp{position:absolute;border-radius:50%;background:rgba(29,185,84,.3);transform:scale(0);animation:rp .65s ease-out;pointer-events:none}
 .btn .rp,.tabs .on .rp{background:rgba(255,255,255,.45)}@keyframes rp{to{transform:scale(1);opacity:0}}
 .btn{width:100%;padding:15px;border:0;border-radius:16px;font-size:15px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--p1),var(--p2) 55%,var(--cy));box-shadow:0 8px 22px rgba(29,185,84,.4);cursor:pointer;transition:transform .15s,box-shadow .2s}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px}.btn svg{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .btn:active{transform:scale(.96)}.btn.ghost{background:#fff;color:var(--tx);border:1.5px solid var(--ln);box-shadow:none}
 .bio{display:grid;place-items:center;width:62px;height:62px;margin:14px auto 0;border-radius:50%;background:#fff;border:1.5px solid var(--ln);color:var(--p1);cursor:pointer;box-shadow:0 8px 20px rgba(29,185,84,.2);transition:transform .15s}.bio:active{transform:scale(.92)}.bio svg{width:34px;height:34px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .ins{display:block;margin:12px auto 0;background:none;border:0;color:var(--p1);font-weight:700;font-size:13px;cursor:pointer}
@@ -182,7 +183,7 @@ async function setLogo(src){if(!src)return;const k='v2'+src.length+src.slice(200
 useLogo(LS('lp'));
 rpc('pub').then(p=>{COMPANY=p.company;$('cn').textContent=p.company;setLogo(p.logo)}).catch(()=>{});
 
-function apply(d){D=d;if(!d.periods.some(x=>x.p===per)){const ok=d.periods.filter(x=>!x.locked);per=(ok.length?ok:d.periods).slice(-1)[0].p}FOTO=LS('f_'+d.me.nik)||'';render();hideSpl();
+function apply(d){D=d;if(!d.periods.some(x=>x.p===per)){const ok=d.periods.filter(x=>!x.locked);per=((ok.length?ok:d.periods).slice(-1)[0]||{}).p||''}FOTO=LS('f_'+d.me.nik)||'';render();hideSpl();
  if(!imgDone){imgDone=1;rpc('getImages',tok).then(r=>{if(r.foto){FOTO=r.foto;LS('f_'+D.me.nik,r.foto)}if(r.logo)return setLogo(r.logo)}).then(()=>render()).catch(()=>{})}}
 function enter(r){tok=r.token;LS('tok',tok);imgDone=0;apply(r.data);tab(0)}
 const setLb=b=>{$('lb').innerHTML=b?'<span class="spin"></span>':'';if(!b)$('lb').textContent=t('login')};
