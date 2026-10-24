@@ -12,7 +12,7 @@ function doGet() {
 }
 
 // API JSON untuk GitHub Pages (POST text/plain agar tanpa preflight CORS)
-const API = { pub, login, getData, getImages, changePassword, regDevice, loginDevice, unregDevice };
+const API = { pub, login, getData, getImages, getSigs, changePassword, regDevice, loginDevice, unregDevice };
 function doPost(e) {
   let out;
   try {
@@ -97,7 +97,7 @@ function build_(u) {
   const slips = s.filter(r => (spv || r['NIP'] === u['NIK']) && !lockedSet.has(r['Periode'])).map(r => {
     const e = emp.find(x => x['NIK'] === r['NIP']) || {};
     const o = Object.assign({}, r, { Nama: e['Nama Karyawan'] || r['NIP'], Jabatan: e['Jabatan'] || '', Departemen: e['Departemen'] || '', Bank: e['Bank'] || '', Rek: e['No Rekening'] || '' });
-    delete o['Logo Perusahaan']; delete o._row; return o;
+    delete o['Logo Perusahaan']; delete o['TTD']; delete o._row; return o;
   });
   const me = emp.find(x => x['NIK'] === u['NIK']) || {};
   return {
@@ -151,6 +151,38 @@ function setupTrigger() {
 }
 
 function getData(t) { return build_(who_(t)); }
+
+// Tanda tangan manager untuk PDF: link di sheet Slip_Gaji sel M2 (kiri) dan M3 (kanan); file asli diambil tanpa kompresi
+function cellUrl_(cell) {
+  const rt = cell.getRichTextValue();
+  let u = rt && rt.getLinkUrl();
+  if (!u && rt) for (const r of rt.getRuns()) if (r.getLinkUrl()) { u = r.getLinkUrl(); break; }
+  if (!u) { const f = cell.getFormula(), m = f && f.match(/"(https?:[^"]+)"/); u = m ? m[1] : cell.getDisplayValue(); }
+  return u;
+}
+function sigImg_(url) {
+  const m = String(url || '').match(/[-\w]{25,}/);
+  if (!m) return '';
+  const c = CacheService.getScriptCache(), k = 'g_' + m[0];
+  let d = c.get(k);
+  if (d) return d;
+  try {
+    const r = UrlFetchApp.fetch('https://www.googleapis.com/drive/v3/files/' + m[0] + '?alt=media',
+      { headers: { Authorization: 'Bearer ' + ScriptApp.getOAuthToken() }, muteHttpExceptions: true });
+    if (r.getResponseCode() === 200) {
+      const b = r.getBlob();
+      d = 'data:' + (b.getContentType() || 'image/png').split(';')[0] + ';base64,' + Utilities.base64Encode(b.getBytes());
+      if (d.length < 95000) c.put(k, d, TTL);
+      return d;
+    }
+  } catch (e) {}
+  return img_(url, 900);
+}
+function getSigs(t) {
+  who_(t);
+  const sh = sheet_('Slip_Gaji');
+  return { a: sigImg_(cellUrl_(sh.getRange('M2'))), b: sigImg_(cellUrl_(sh.getRange('M3'))) };
+}
 
 function getImages(t) {
   const u = who_(t);
