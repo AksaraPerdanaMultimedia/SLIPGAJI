@@ -12,7 +12,7 @@ function doGet() {
 }
 
 // API JSON untuk GitHub Pages (POST text/plain agar tanpa preflight CORS)
-const API = { pub, login, getData, getImages, getSigs, changePassword, regDevice, loginDevice, unregDevice };
+const API = { pub, login, getData, getImages, getSigs, getKpi, getRef, changePassword, regDevice, loginDevice, unregDevice };
 function doPost(e) {
   let out;
   try {
@@ -144,7 +144,7 @@ function unregDevice(dt) {
 }
 
 // Pemanasan cache tiap 1 menit: login selalu cepat & data selalu segar. Jalankan setupTrigger() SEKALI dari editor.
-function warm() { tbl_('Users', 'Akun', true); tbl_('Slip_Gaji', 'Periode', true); tbl_('Data_Karyawan', 'NIK', true); logo_(); }
+function warm() { tbl_('Users', 'Akun', true); tbl_('Slip_Gaji', 'Periode', true); tbl_('Data_Karyawan', 'NIK', true); logo_(); try { kpiData_(true); } catch (e) {} }
 function setupTrigger() {
   ScriptApp.getProjectTriggers().filter(t => t.getHandlerFunction() === 'warm').forEach(t => ScriptApp.deleteTrigger(t));
   ScriptApp.newTrigger('warm').timeBased().everyMinutes(1).create();
@@ -182,6 +182,52 @@ function getSigs(t) {
   who_(t);
   const sh = sheet_('Slip_Gaji');
   return { a: sigImg_(cellUrl_(sh.getRange('M2'))), b: sigImg_(cellUrl_(sh.getRange('M3'))) };
+}
+
+// ===== KPI & Referensi Nilai Poin (spreadsheet "Format KPI Teknisi APM Depok") =====
+const KPI_ID = '1czzXRndFHBYehpti8TvlsPdtRizGE77LmFEs0L6rNOg';
+function ksheet_(n) { return SpreadsheetApp.openById(KPI_ID).getSheets().find(s => s.getName().toLowerCase() === n.toLowerCase()); }
+function num_(v) {
+  if (typeof v === 'number') return v;
+  let s = String(v).replace(/[^\d.,-]/g, '');
+  if (!s) return 0;
+  if (/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(s)) s = s.replace(/\./g, '').replace(',', '.'); else s = s.replace(/,/g, '');
+  return Number(s) || 0;
+}
+// Total Pemasangan Individu per teknisi per bulan (sheet "Laporan Harian", kolom "Total Pemasangan Individu")
+function kpiData_(force) {
+  const c = CacheService.getScriptCache(), hit = !force && c.get('kpi');
+  if (hit) return JSON.parse(hit);
+  const v = ksheet_('Laporan Harian').getDataRange().getDisplayValues();
+  let year = new Date().getFullYear(), target = 66, month = '', col = -1;
+  const months = [], rows = {};
+  v.forEach(r => {
+    const a = String(r[0]).trim();
+    let m = a.match(/TAHUN\s+(\d{4})/i); if (m) year = +m[1];
+    m = a.match(/=\s*(\d+)\s*Pemasangan/i); if (m) target = +m[1];
+    m = a.match(/^BULAN\s+(\S+)/i);
+    if (m) { month = m[1].charAt(0).toUpperCase() + m[1].slice(1).toLowerCase() + ' ' + year; if (!months.includes(month)) months.push(month); col = -1; return; }
+    if (a === 'ID Karyawan') { col = r.findIndex(x => String(x).trim() === 'Total Pemasangan Individu'); return; }
+    if (month && col >= 0 && /^[A-Za-z]+\d+$/.test(a)) (rows[a] = rows[a] || { id: a, name: r[1], m: {} }).m[month] = num_(r[col]);
+  });
+  const out = { target, months, rows: Object.values(rows) };
+  try { c.put('kpi', JSON.stringify(out), 60); } catch (e) {}
+  return out;
+}
+function getKpi(t) {
+  const u = who_(t), d = kpiData_(), spv = u['Jabatan'].toUpperCase() === 'SPV';
+  const mine = d.rows.find(r => r.id === u['NIK']);
+  return { target: d.target, months: d.months, hasMe: !!mine, me: mine ? mine.m : {}, all: spv ? d.rows : null };
+}
+// Tabel referensi: Target Poin -> Total Rp (sheet "Reference", kolom A dan E)
+function getRef(t) {
+  who_(t);
+  const c = CacheService.getScriptCache(), hit = c.get('ref');
+  if (hit) return JSON.parse(hit);
+  const sh = ksheet_('Reference'), v = sh.getRange(2, 1, Math.max(sh.getLastRow() - 1, 1), 5).getValues();
+  const out = { rows: v.filter(r => r[0] !== '' && num_(r[0]) > 0).map(r => [num_(r[0]), num_(r[4])]) };
+  try { c.put('ref', JSON.stringify(out), 600); } catch (e) {}
+  return out;
 }
 
 function getImages(t) {
