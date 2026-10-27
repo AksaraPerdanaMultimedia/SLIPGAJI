@@ -71,6 +71,7 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
 .rb .nb{animation:rn 1.8s ease-in-out infinite}@keyframes rn{50%{opacity:.35}}
 .rb text{font-weight:800;font-family:inherit}
 .cap{text-align:center;font-weight:700;color:var(--mu);letter-spacing:.3px;margin:2px 0 4px}
+.mlb{display:table;margin:0 auto 8px;padding:6px 18px;border-radius:99px;background:rgba(29,185,84,.12);color:var(--p1);font-weight:800;font-size:13px;letter-spacing:.3px}
 .chips{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 12px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
 .chip{flex:none;border:1.5px solid var(--ln);background:#fff;color:var(--tx);font-weight:700;font-size:13px;padding:9px 16px;border-radius:99px;cursor:pointer;transition:.25s}
 .chip.on{background:linear-gradient(135deg,var(--p1),var(--cy));color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(29,185,84,.4);transform:scale(1.05)}
@@ -278,13 +279,12 @@ let KP=null,KT=0,KM='',RF=null;
 async function kdraw(){const b=$('kb');if(!b)return;
  if(!KP||Date.now()-KT>60000){KP=await rpc('getKpi',tok);KT=Date.now()}
  const ms=KP.months;if(!ms.length||(!D.spv&&!KP.hasMe)){b.innerHTML=`<div class="empty">${t('kpi_none')}</div>`;return}
- KM=ms.includes(KM)?KM:ms[ms.length-1];
- b.innerHTML=`<div class="chips">${ms.map(m=>`<button class="chip rip ${m===KM?'on':''}" data-km="${esc(m)}">${esc(pl(m))}</button>`).join('')}</div>`+(D.spv?'<div id="kl"></div>':`<div class="rbw">${robot('k')}</div><div class="cap">${t('kpi_cap')}</div>`);
+ const cm=new Date().toLocaleDateString('id-ID',{timeZone:'Asia/Jakarta',month:'long',year:'numeric'});KM=ms.find(m=>m.toLowerCase()===cm.toLowerCase())||cm;
+ b.innerHTML=`<div class="mlb">${esc(pl(KM))}</div>`+(D.spv?'<div id="kl"></div>':`<div class="rbw">${robot('k')}</div><div class="cap">${t('kpi_cap')}</div>`);
  setTimeout(kup,150)}
 function kup(){if(!KP||!$('kb'))return;
  if(D.spv){const rs=[...KP.all].sort((a,b)=>(b.m[KM]||0)-(a.m[KM]||0));$('kl').innerHTML=rs.map((r,n)=>`<div class="kr" style="--n:${n}"><span>${esc(r.name)}</span><div class="bar"><i style="--w:${Math.min(100,(r.m[KM]||0)/KP.target*100)}%"></i></div><b>${r.m[KM]||0}</b></div>`).join('')}
  else{const v=KP.me[KM]||0;rset($('kb'),v,v/KP.target)}}
-$('kb').addEventListener('click',e=>{const c=e.target.closest('[data-km]');if(c){KM=c.dataset.km;qa('.chip').forEach(x=>x.classList.toggle('on',x===c));kup()}});
 const rcalc=p=>{if(!RF||!RF.length||p<=0)return 0;const m=RF[RF.length-1];if(p>m[0]){const q=RF[RF.length-2]||[0,0];return m[1]+(p-m[0])*(m[1]-q[1])}const r=RF.find(x=>x[0]===p);return r?r[1]:0};
 let RV=0;
 function openRef(){const r=$('rf');if(r.dataset.b!==L){r.dataset.b=L;r.innerHTML=`<div class="rbw">${robot('r')}</div><label class="lb">${t('ref_in')}</label><input id="rpi" type="number" inputmode="numeric" min="0" max="999" placeholder="${t('ref_ph')}"><div class="tot"><small>${t('ref_tot')}</small><b id="rtv">Rp 0</b></div>`;$('rpi').oninput=refUp}
