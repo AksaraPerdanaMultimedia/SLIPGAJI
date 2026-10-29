@@ -71,6 +71,7 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
 .rb .nb{animation:rn 1.8s ease-in-out infinite}@keyframes rn{50%{opacity:.35}}
 .rb text{font-weight:800;font-family:inherit}
 .cap{text-align:center;font-weight:700;color:var(--mu);letter-spacing:.3px;margin:2px 0 4px}
+.kdd{width:min(100%,250px);margin:0 auto 12px}.kdd .dd-b span{text-align:center}
 .mlb{display:table;margin:0 auto 8px;padding:6px 18px;border-radius:99px;background:rgba(29,185,84,.12);color:var(--p1);font-weight:800;font-size:13px;letter-spacing:.3px}
 .chips{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 12px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
 .chip{flex:none;border:1.5px solid var(--ln);background:#fff;color:var(--tx);font-weight:700;font-size:13px;padding:9px 16px;border-radius:99px;cursor:pointer;transition:.25s}
@@ -275,16 +276,19 @@ const robot=k=>`<svg class="rb" viewBox="0 0 300 270"><defs>
 </g></svg>`;
 function cnt(el,to,fmt,ms=950){if(!el)return;const f=el._v||0,t0=performance.now();cancelAnimationFrame(el._r);const st=n=>{const k=Math.min(1,(n-t0)/ms),e=1-Math.pow(1-k,3);el._v=f+(to-f)*e;el.textContent=fmt(el._v);if(k<1)el._r=requestAnimationFrame(st)};el._r=requestAnimationFrame(st)}
 const rset=(r,v,lv)=>{const f=r&&r.querySelector('.bf');if(f)f.style.setProperty('--lv',Math.max(0,Math.min(1,lv)));cnt(r&&r.querySelector('.rn'),v,x=>Math.round(x))};
-let KP=null,KT=0,KM='',RF=null;
+let KP=null,KT=0,KM='',KMS=[],RF=null;
+const kmenu=()=>`<div class="dd kdd" id="kdd"><button class="dd-b rip" id="kpb"><i>${ic('cal')}</i><span>${esc(pl(KM))}</span><s>${ic('chev')}</s></button><div class="dd-l">${[...KMS].reverse().map((m,n)=>`<button class="do rip ${m===KM?'on':''}" data-km="${esc(m)}" style="--n:${n}"><i>${ic('cal')}</i><span>${esc(pl(m))}</span>${m===KM?`<em class="ck">${ic('ok')}</em>`:''}</button>`).join('')}</div></div>`;
 async function kdraw(){const b=$('kb');if(!b)return;
  if(!KP||Date.now()-KT>60000){KP=await rpc('getKpi',tok);KT=Date.now()}
  const ms=KP.months;if(!ms.length||(!D.spv&&!KP.hasMe)){b.innerHTML=`<div class="empty">${t('kpi_none')}</div>`;return}
- const cm=new Date().toLocaleDateString('id-ID',{timeZone:'Asia/Jakarta',month:'long',year:'numeric'});KM=ms.find(m=>m.toLowerCase()===cm.toLowerCase())||cm;
- b.innerHTML=`<div class="mlb">${esc(pl(KM))}</div>`+(D.spv?'<div id="kl"></div>':`<div class="rbw">${robot('k')}</div><div class="cap">${t('kpi_cap')}</div>`);
+ const cm=new Date().toLocaleDateString('id-ID',{timeZone:'Asia/Jakarta',month:'long',year:'numeric'});const c0=ms.find(m=>m.toLowerCase()===cm.toLowerCase())||cm;KMS=ms.includes(c0)?ms:[...ms,c0];KM=KM&&KMS.includes(KM)?KM:c0;
+ b.innerHTML=kmenu()+(D.spv?'<div id="kl"></div>':`<div class="rbw">${robot('k')}</div><div class="cap">${t('kpi_cap')}</div>`);
  setTimeout(kup,150)}
 function kup(){if(!KP||!$('kb'))return;
  if(D.spv){const rs=[...KP.all].sort((a,b)=>(b.m[KM]||0)-(a.m[KM]||0));$('kl').innerHTML=rs.map((r,n)=>`<div class="kr" style="--n:${n}"><span>${esc(r.name)}</span><div class="bar"><i style="--w:${Math.min(100,(r.m[KM]||0)/KP.target*100)}%"></i></div><b>${r.m[KM]||0}</b></div>`).join('')}
  else{const v=KP.me[KM]||0;rset($('kb'),v,v/KP.target)}}
+$('kb').addEventListener('click',e=>{if(e.target.closest('#kpb')){$('kdd').classList.toggle('open');return}const c=e.target.closest('[data-km]');if(c){KM=c.dataset.km;$('kdd').outerHTML=kmenu();kup()}});
+document.addEventListener('click',e=>{const k=$('kdd');if(k&&!e.target.closest('#kdd'))k.classList.remove('open')});
 const rcalc=p=>{if(!RF||!RF.length||p<=0)return 0;const m=RF[RF.length-1];if(p>m[0]){const q=RF[RF.length-2]||[0,0];return m[1]+(p-m[0])*(m[1]-q[1])}const r=RF.find(x=>x[0]===p);return r?r[1]:0};
 let RV=0;
 function openRef(){const r=$('rf');if(r.dataset.b!==L){r.dataset.b=L;r.innerHTML=`<div class="rbw">${robot('r')}</div><label class="lb">${t('ref_in')}</label><input id="rpi" type="number" inputmode="numeric" min="0" max="999" placeholder="${t('ref_ph')}"><div class="tot"><small>${t('ref_tot')}</small><b id="rtv">Rp 0</b></div>`;$('rpi').oninput=refUp}
@@ -324,7 +328,7 @@ const M=[['profile'],['payroll'],['fp',bioOK],['pw'],['lang'],['inst',web&&!sa],
 function menu(){const mk=L+sa;if($('menu').dataset.k===mk)return;$('menu').dataset.k=mk;let n=0;$('menu').innerHTML=M.filter(m=>m[1]===undefined||m[1]).map(m=>`<button class="mi rip" data-m="${m[0]}" style="--i:${n++}"><i>${ic(m[0])}</i><span>${t('m_'+m[0])}</span><em>›</em></button>`).join('');
  qa('.mi').forEach(b=>b.onclick=()=>{const k=b.dataset.m;k==='out'?out():k==='inst'?instAct():setTimeout(()=>sheet(k),120)})}
 const VW=['vHome','vSlip','vKpi','vRef','vAkun'];
-const tab=n=>{VW.forEach((v,i)=>$(v).classList.toggle('hide',i!==n));VW.forEach((v,i)=>$('t'+i).classList.toggle('on',i===n));scrollTo(0,0);if(!D)return;if(n===2)kdraw().catch(()=>{const b=$('kb');if(b)b.innerHTML=`<div class="empty">${t('kpi_none')}</div>`});if(n===3)openRef()};
+const tab=n=>{VW.forEach((v,i)=>$(v).classList.toggle('hide',i!==n));VW.forEach((v,i)=>$('t'+i).classList.toggle('on',i===n));scrollTo(0,0);if(!D)return;if(n===2)(KM='',kdraw()).catch(()=>{const b=$('kb');if(b)b.innerHTML=`<div class="empty">${t('kpi_none')}</div>`});if(n===3)openRef()};
 [0,1,2,3,4].forEach(i=>$('t'+i).onclick=()=>tab(i));
 // Beranda: kotak masuk (slip terbit tanggal 3 + riwayat ganti password)
 const fd=ts=>new Date(ts).toLocaleDateString(loc(),{timeZone:'Asia/Jakarta',day:'numeric',month:'long',year:'numeric'});
