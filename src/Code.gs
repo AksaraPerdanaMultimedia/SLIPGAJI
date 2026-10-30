@@ -12,7 +12,7 @@ function doGet() {
 }
 
 // API JSON untuk GitHub Pages (POST text/plain agar tanpa preflight CORS)
-const API = { pub, login, getData, getImages, getSigs, getKpi, getRef, changePassword, regDevice, loginDevice, unregDevice };
+const API = { pub, login, getData, getImages, getSigs, getKpi, getRef, getJadwal, getAttend, changePassword, regDevice, loginDevice, unregDevice };
 function doPost(e) {
   let out;
   try {
@@ -144,7 +144,7 @@ function unregDevice(dt) {
 }
 
 // Pemanasan cache tiap 1 menit: login selalu cepat & data selalu segar. Jalankan setupTrigger() SEKALI dari editor.
-function warm() { tbl_('Users', 'Akun', true); tbl_('Slip_Gaji', 'Periode', true); tbl_('Data_Karyawan', 'NIK', true); logo_(); try { kpiData_(true); } catch (e) {} }
+function warm() { tbl_('Users', 'Akun', true); tbl_('Slip_Gaji', 'Periode', true); tbl_('Data_Karyawan', 'NIK', true); logo_(); try { kpiData_(true); } catch (e) {} try { attMap_(true); } catch (e) {} try { CacheService.getScriptCache().remove('jdw'); jadwalData_(); } catch (e) {} }
 function setupTrigger() {
   ScriptApp.getProjectTriggers().filter(t => t.getHandlerFunction() === 'warm').forEach(t => ScriptApp.deleteTrigger(t));
   ScriptApp.newTrigger('warm').timeBased().everyMinutes(1).create();
@@ -228,6 +228,85 @@ function getRef(t) {
   const out = { rows: v.filter(r => r[0] !== '' && num_(r[0]) > 0).map(r => [num_(r[0]), num_(r[4])]) };
   try { c.put('ref', JSON.stringify(out), 600); } catch (e) {}
   return out;
+}
+
+// ===== Jadwal kerja (spreadsheet "Jadwal Masuk Periode ...": L = libur, P1 = masuk) =====
+const JDW_ID = '1fTM6NeNs6zZ50IeeTTGH6jhE9fFMc0P1wRqAogz47cI';
+const BLN_ALL = { januari: 0, februari: 1, maret: 2, april: 3, mei: 4, juni: 5, juli: 6, agustus: 7, september: 8, oktober: 9, november: 10, desember: 11 };
+function parseJadwal_(sh) {
+  const v = sh.getDataRange().getDisplayValues();
+  let m = null;
+  for (let i = 0; i < Math.min(v.length, 6) && !m; i++) for (const x of v[i]) { m = String(x).match(/PERIODE\s+(\d{1,2})\s+([A-Za-z]+)\s+S\s*\/?\s*D\s+(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})/i); if (m) break; }
+  if (!m) return null;
+  const sm = BLN_ALL[m[2].toLowerCase()], em = BLN_ALL[m[4].toLowerCase()], ey = +m[5];
+  if (sm === undefined || em === undefined) return null;
+  const hi = v.findIndex(r => String(r[0]).trim().toUpperCase() === 'NIK');
+  if (hi < 0 || !v[hi + 1]) return null;
+  let n = 0; while (/^\d{1,2}$/.test(String(v[hi + 1][2 + n]).trim())) n++;
+  if (!n) return null;
+  const start = Date.UTC(sm > em ? ey - 1 : ey, sm, +m[1]), days = [];
+  for (let i = 0; i < n; i++) days.push(new Date(start + i * 864e5).toISOString().slice(0, 10));
+  const rows = []; let shift = null;
+  for (let r = hi + 2; r < v.length && /^[A-Za-z]+\d+$/.test(String(v[r][0]).trim()); r++)
+    rows.push({ id: String(v[r][0]).trim(), name: v[r][1], codes: v[r].slice(2, 2 + n).map(x => String(x).trim()) });
+  v.forEach(r => r.forEach(x => { const t = String(x).match(/(\d{1,2})[.:](\d{2})\s*-\s*(\d{1,2})[.:](\d{2})/); if (t && !shift) shift = { in: t[1].padStart(2, '0') + ':' + t[2], out: t[3].padStart(2, '0') + ':' + t[4] }; }));
+  return { days, shift, rows };
+}
+function jadwalData_() {
+  const c = CacheService.getScriptCache(), hit = c.get('jdw');
+  if (hit) return JSON.parse(hit);
+  const out = [];
+  SpreadsheetApp.openById(JDW_ID).getSheets().forEach(sh => { const p = parseJadwal_(sh); if (p) out.push(p); });
+  try { c.put('jdw', JSON.stringify(out), 120); } catch (e) {}
+  return out;
+}
+function getJadwal(t) {
+  const u = who_(t), spv = u['Jabatan'].toUpperCase() === 'SPV';
+  const today = Utilities.formatDate(new Date(), 'Asia/Jakarta', 'yyyy-MM-dd'), ps = jadwalData_();
+  if (spv) { // Supervisor: hanya karyawan yang masuk hari ini
+    const p = ps.find(x => x.days.includes(today)), i = p ? p.days.indexOf(today) : -1;
+    return { spv: true, today, shift: p ? p.shift : null,
+      list: i < 0 ? [] : p.rows.filter(r => r.codes[i] && r.codes[i].toUpperCase() !== 'L').map(r => ({ name: r.name, code: r.codes[i] })) };
+  }
+  return { spv: false, today, periods: ps.map(p => { const r = p.rows.find(x => x.id === u['NIK']); return r ? { days: p.days, shift: p.shift, codes: r.codes } : null; }).filter(Boolean) };
+}
+
+// ===== Daftar Kehadiran: jadwal (P1 = masuk, L = libur) + clock in/out dari sheet "Detail Absensi Harian" =====
+const ATT_ID = '1tHZzQ4JEfgImeBiDH_5DM3sP-Ld7ovI7Yx7PJ3bf3aw';
+function hm_(s) { const m = String(s || '').match(/(\d{1,2}):(\d{2})/); return m ? ('0' + m[1]).slice(-2) + ':' + m[2] : ''; }
+function dkey_(s) {
+  s = String(s || '').trim();
+  let m = s.match(/(\d{4})-(\d{2})-(\d{2})/); if (m) return m[0];
+  m = s.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})$/);
+  return m ? m[3] + '-' + ('0' + m[2]).slice(-2) + '-' + ('0' + m[1]).slice(-2) : '';
+}
+function attMap_(force) {
+  const cc = CacheService.getScriptCache(), hit = !force && cc.get('att');
+  if (hit) return JSON.parse(hit);
+  const att = {}, sh = SpreadsheetApp.openById(ATT_ID).getSheets().find(s => s.getName().toLowerCase() === 'detail absensi harian');
+  if (sh) {
+    const v = sh.getDataRange().getDisplayValues();
+    const hr = v.findIndex(r => String(r[0]).trim() === 'Hari' && String(r[1]).trim() === 'Tanggal');
+    for (let r = hr + 1; hr >= 0 && r < v.length; r++) {
+      const d = dkey_(v[r][1]), nik = String(v[r][2]).trim();
+      if (d && nik) (att[nik] = att[nik] || {})[d] = { i: hm_(v[r][4]), o: hm_(v[r][5]) };
+    }
+  }
+  try { cc.put('att', JSON.stringify(att), 60); } catch (e) {}
+  return att;
+}
+function getAttend(t) {
+  const u = who_(t), spv = u['Jabatan'].toUpperCase() === 'SPV', ps = jadwalData_(), att = attMap_();
+  const today = Utilities.formatDate(new Date(), 'Asia/Jakarta', 'yyyy-MM-dd'), tm = Utilities.formatDate(new Date(Date.now() + 864e5), 'Asia/Jakarta', 'yyyy-MM-dd');
+  const cell = (r, d) => { const p = ps.find(x => x.days.includes(d)); if (!p) return null; const code = (r.codes[p.days.indexOf(d)] || '').toUpperCase(), a = (att[r.id] || {})[d] || {}; return { d, code, i: a.i || '', o: a.o || '' }; };
+  if (spv) { // Supervisor: hanya karyawan yang masuk hari ini dan besok
+    const g = d => { const p = ps.find(x => x.days.includes(d)); return { d, rows: !p ? [] : p.rows.map(r => Object.assign({ name: r.name }, cell(r, d))).filter(x => x.code && x.code !== 'L') }; };
+    return { today, spv: true, groups: [g(today), g(tm)] };
+  }
+  const p = ps.find(x => x.days.includes(today) && x.rows.some(r => r.id === u['NIK'])) || ps.slice().reverse().find(x => x.rows.some(r => r.id === u['NIK']));
+  const r = p && p.rows.find(x => x.id === u['NIK']);
+  if (!r) return { today, none: true, days: [] };
+  return { today, shift: p.shift, days: p.days.map(d => cell(r, d)) };
 }
 
 function getImages(t) {
