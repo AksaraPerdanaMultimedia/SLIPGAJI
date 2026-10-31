@@ -300,7 +300,7 @@ function getAttend(t) {
   const today = Utilities.formatDate(new Date(), 'Asia/Jakarta', 'yyyy-MM-dd'), tm = Utilities.formatDate(new Date(Date.now() + 864e5), 'Asia/Jakarta', 'yyyy-MM-dd');
   const cell = (r, d) => { const p = ps.find(x => x.days.includes(d)); if (!p) return null; const code = (r.codes[p.days.indexOf(d)] || '').toUpperCase(), a = (att[r.id] || {})[d] || {}; return { d, code, i: a.i || '', o: a.o || '' }; };
   if (spv) { // Supervisor: hanya karyawan yang masuk hari ini dan besok
-    const g = d => { const p = ps.find(x => x.days.includes(d)); return { d, rows: !p ? [] : p.rows.map(r => Object.assign({ name: r.name }, cell(r, d))).filter(x => x.code && x.code !== 'L') }; };
+    const g = d => { const p = ps.find(x => x.days.includes(d)); return { d, rows: !p ? [] : p.rows.map(r => Object.assign({ name: r.name }, cell(r, d))).filter(x => x.code && x.code !== 'L').map(x => ({ name: x.name })) }; };
     return { today, spv: true, groups: [g(today), g(tm)] };
   }
   const p = ps.find(x => x.days.includes(today) && x.rows.some(r => r.id === u['NIK'])) || ps.slice().reverse().find(x => x.rows.some(r => r.id === u['NIK']));
