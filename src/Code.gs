@@ -97,7 +97,13 @@ function build_(u) {
   const slips = s.filter(r => (spv || r['NIP'] === u['NIK']) && !lockedSet.has(r['Periode'])).map(r => {
     const e = emp.find(x => x['NIK'] === r['NIP']) || {};
     const o = Object.assign({}, r, { Nama: e['Nama Karyawan'] || r['NIP'], Jabatan: e['Jabatan'] || '', Departemen: e['Departemen'] || '', Bank: e['Bank'] || '', Rek: e['No Rekening'] || '' });
-    delete o['Logo Perusahaan']; delete o['TTD']; delete o._row; return o;
+    delete o['Logo Perusahaan']; delete o['TTD']; delete o._row;
+    // judul kolom tidak peka huruf besar/kecil (mis. "Bpjs" = "BPJS"): nilai ditampilkan apa adanya dari sheet
+    const low = {}; Object.keys(o).forEach(k => low[k.toLowerCase().replace(/\s+/g, ' ').trim()] = k);
+    ['Periode', 'NIP', 'Gaji Pokok', 'BPJS', 'Bensin', 'Sewa Motor', 'Perolehan Poin', 'Bonus Poin', 'Total Salary', 'PPh21 (2,5%)', 'THP'].forEach(k => {
+      const sk = low[k.toLowerCase()]; if (sk && sk !== k) { o[k] = o[sk]; delete o[sk]; }
+    });
+    return o;
   });
   const me = emp.find(x => x['NIK'] === u['NIK']) || {};
   return {
