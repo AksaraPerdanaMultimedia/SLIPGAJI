@@ -236,6 +236,7 @@ const lab=k=>L==='en'?(FLE[k]||k):k;
 const MEN={Januari:'January',Februari:'February',Maret:'March',Mei:'May',Juni:'June',Juli:'July',Agustus:'August',Oktober:'October',Desember:'December'};
 const pl=p=>L==='en'?p.replace(/^\S+/,m=>MEN[m]||m):p;
 const jb=j=>/^spv$/i.test(String(j).trim())?'Supervisor':j;
+const sv=(o,k)=>o[k]!==undefined?o[k]:o[Object.keys(o).find(x=>x.toLowerCase().trim()===k.toLowerCase())];
 const rp=v=>!v?'-':(/^Rp/.test(v)?v:'Rp '+v.replace(/,00$/,''));
 const loc=()=>L==='en'?'en-US':'id-ID';
 function tr(){qa('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));qa('[data-p]').forEach(e=>e.placeholder=t(e.dataset.p));document.documentElement.lang=L;
@@ -428,8 +429,8 @@ const F=[['Gaji Pokok'],['BPJS'],['Bensin'],['Sewa Motor'],['Perolehan Poin',1],
 function slipHtml(s,i){
  return `<div class="card slip" style="animation-delay:${i*.08}s"><div class="hd">${LOGO?`<img src="${LOGO}">`:''}<div><b>${esc(COMPANY)}</b><small>${t('tab2')} · ${esc(pl(s['Periode']))}</small></div></div>
  ${D.spv?`<div class="ln" style="--i:0"><span>${t('emp')}</span><span>${esc(s.Nama)}</span></div>`:''}
- ${F.map(([k,raw,neg],n)=>`<div class="ln ${neg?'neg':''}" style="--i:${n+1}"><span>${lab(k)}</span><span>${raw?esc(s[k]||'-'):neg?'- '+rp(s[k]):rp(s[k])}</span></div>`).join('')}
- <div class="thp"><span>${lab('THP')}</span><span>${rp(s['THP'])}</span></div>
+ ${F.map(([k,raw,neg],n)=>`<div class="ln ${neg?'neg':''}" style="--i:${n+1}"><span>${lab(k)}</span><span>${raw?esc(sv(s,k)||'-'):neg?'- '+rp(sv(s,k)):rp(sv(s,k))}</span></div>`).join('')}
+ <div class="thp"><span>${lab('THP')}</span><span>${rp(sv(s,'THP'))}</span></div>
  ${D.spv?'':`<div class="btn rip" style="margin-top:14px;text-align:center" onclick="dl('${esc(s['Periode'])}')">${t('dl')}</div>`}</div>`}
 const dd=$('dd'),ddc=()=>dd.classList.remove('open');
 $('pb').onclick=e=>{e.stopPropagation();dd.classList.toggle('open')};
@@ -472,8 +473,8 @@ async function dl(pr){
  d.setFontSize(10);d.setFont('helvetica','normal');d.setTextColor(30,30,30);
  [[t('p_name'),s.Nama],['NIK',s['NIP']],[t('p_pos'),s.Jabatan+' / '+s.Departemen],['Bank',s.Bank+' - '+s.Rek]].forEach(([a,b])=>{d.text(a,15,y);d.text(': '+b,45,y);y+=7});
  y+=4;d.setFont('helvetica','bold');d.setFillColor(...OR);d.setTextColor(255);d.rect(15,y-5,180,8,'F');d.text(t('p_comp'),18,y+.5);d.text(t('p_amt'),192,y+.5,{align:'right'});y+=10;d.setTextColor(30,30,30);d.setFont('helvetica','normal');
- F.forEach(([k,raw,neg])=>{d.text(lab(k),18,y);d.text(raw?String(s[k]||'-'):(neg?'- ':'')+rp(s[k]),192,y,{align:'right'});d.setDrawColor(...ORL);d.setLineWidth(.2);d.line(15,y+2.5,195,y+2.5);y+=8});
- y+=2;d.setFillColor(...OR);d.rect(15,y-5,180,10,'F');d.setTextColor(255);d.setFont('helvetica','bold');d.setFontSize(12);d.text('TAKE HOME PAY (THP)',18,y+1.5);d.text(rp(s['THP']),192,y+1.5,{align:'right'});
+ F.forEach(([k,raw,neg])=>{d.text(lab(k),18,y);d.text(raw?String(sv(s,k)||'-'):(neg?'- ':'')+rp(sv(s,k)),192,y,{align:'right'});d.setDrawColor(...ORL);d.setLineWidth(.2);d.line(15,y+2.5,195,y+2.5);y+=8});
+ y+=2;d.setFillColor(...OR);d.rect(15,y-5,180,10,'F');d.setTextColor(255);d.setFont('helvetica','bold');d.setFontSize(12);d.text('TAKE HOME PAY (THP)',18,y+1.5);d.text(rp(sv(s,'THP')),192,y+1.5,{align:'right'});
  const ys=y+16,NM=['Agung Purnama','Yonpi Sahuri'];sg.forEach((g,i)=>{if(!g)return;const w=g.w*.24,h=g.h*.24,cx=i?150:60;d.addImage(g.u,'PNG',cx-w/2,ys,w,h);d.setDrawColor(...OR);d.setLineWidth(.3);d.line(cx-30,ys+h+1,cx+30,ys+h+1);d.setTextColor(30,30,30);d.setFont('helvetica','bold');d.setFontSize(10);d.text(NM[i],cx,ys+h+6,{align:'center'})});
  d.setDrawColor(...OR);d.setLineWidth(.6);d.line(15,279,195,279);
  d.setTextColor(120);d.setFont('helvetica','italic');d.setFontSize(8);d.text(t('p_foot',{c:COMPANY}),105,285,{align:'center'});
